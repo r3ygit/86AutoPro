@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>86AutoPro Admin</title>
+
+<style>
+body{
+background:#050505;
+color:white;
+font-family:Inter,sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+margin:0;
+}
+
+.card{
+width:400px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(25px);
+padding:25px;
+border-radius:25px;
+}
+
+input{
+width:100%;
+padding:14px;
+margin:10px 0;
+border:none;
+border-radius:12px;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+}
+
+#loginBox,#uploadBox{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+<div id="loginBox">
+
+<h2>Admin Login</h2>
+
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<div id="uploadBox" style="display:none;">
+
+<h2>Add Car</h2>
+
+<input id="carName" placeholder="Car Name">
+<input id="carPrice" placeholder="Price">
+<input id="carImage" type="file" accept="image/*">
+
+<button onclick="addCar()">Add Car</button>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const supabase = createClient(
+"https://juwpebbsyeixiaxqhvok.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1d3BlYmJzeWVpeGlheHFodm9rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1OTkwNTAsImV4cCI6MjEwNDE3NTA1MH0.ucbnOyAsh1Ht2Uql5WHRfsLzzQrdyUBzaBGUwW-h46c"
+);
+
+window.login = async () => {
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+const { error } =
+await supabase.auth.signInWithPassword({
+email,
+password
+});
+
+if(error){
+alert(error.message);
+return;
+}
+
+document.getElementById("loginBox").style.display="none";
+document.getElementById("uploadBox").style.display="flex";
+
+};
+
+window.addCar = async () => {
+
+const name =
+document.getElementById("carName").value;
+
+const price =
+document.getElementById("carPrice").value;
+
+const file =
+document.getElementById("carImage").files[0];
+
+const fileName =
+Date.now()+"-"+file.name;
+
+const { error:uploadError } =
+await supabase.storage
+.from("cars")
+.upload(fileName,file);
+
+if(uploadError){
+alert(uploadError.message);
+return;
+}
+
+const { data:urlData } =
+supabase.storage
+.from("cars")
+.getPublicUrl(fileName);
+
+const image =
+urlData.publicUrl;
+
+const { error } =
+await supabase
+.from("cars")
+.insert([{
+name,
+price,
+image
+}]);
+
+if(error){
+alert(error.message);
+return;
+}
+
+alert("Car Added!");
+
+document.getElementById("carName").value="";
+document.getElementById("carPrice").value="";
+document.getElementById("carImage").value="";
+
+};
+
+</script>
+
+</body>
+</html>
