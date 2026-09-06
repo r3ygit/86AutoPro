@@ -276,34 +276,20 @@ const container =
 document.getElementById("carsContainer");
 
 container.innerHTML="";
-
 data.forEach(car=>{
+container.innerHTML += `
 
-alert(car.name);
+
+
+
 
 container.innerHTML += `
 
-data.forEach(car=>{
 
-alert(car.name);
-
-container.innerHTML += `
 
 <div class="car-card">
 
-<div class="gallery">
 
-<img src="${car.image}" alt="${car.name}">
-
-</div>
-
-<div class="car-card">
-
-<div class="gallery">
-
-<img src="${car.image}" alt="${car.name}">
-
-</div>
 
 <h2 class="car-name">
 ${car.name}
