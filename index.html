@@ -206,6 +206,11 @@ font-size:35px;
 }
 
 }
+#carsContainer{
+display:flex;
+flex-direction:column;
+gap:30px;
+}
 
 </style>
 </head>
@@ -234,32 +239,10 @@ Browse Cars
 <section id="cars" class="section">
 
 <h2 class="title">
-Featured Car
+Available Cars
 </h2>
 
-<div class="car-card">
-
-<div class="gallery">
-
-
-</div>
-
-<h2 class="car-name">
-M3 TOURING SNAKE EYES
-</h2>
-
-<div class="price">
-₹120
-</div>
-
-<a
-href="https://tally.so/r/Y56RNB"
-target="_blank"
-class="buy-btn">
-BUY NOW
-</a>
-
-</div>
+<div id="carsContainer"></div>
 
 </section>
 
