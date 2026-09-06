@@ -3,315 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>86AutoPro</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>86AutoPro Admin</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Inter',sans-serif;
+font-family:Arial,sans-serif;
 }
 
 body{
-background:#050505;
+background:#0b0b0b;
 color:white;
-min-height:100vh;
-overflow-x:hidden;
-}
-
-body::before{
-content:'';
-position:fixed;
-width:700px;
-height:700px;
-background:#8b5cf640;
-filter:blur(220px);
-top:-250px;
-right:-250px;
-z-index:-1;
-}
-
-body::after{
-content:'';
-position:fixed;
-width:700px;
-height:700px;
-background:#a855f740;
-filter:blur(220px);
-bottom:-250px;
-left:-250px;
-z-index:-1;
-}
-
-.navbar{
-position:sticky;
-top:15px;
-margin:15px;
-padding:18px;
-text-align:center;
-font-size:30px;
-font-weight:800;
-
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(30px);
--webkit-backdrop-filter:blur(30px);
-
-border:1px solid rgba(255,255,255,.12);
-border-radius:25px;
-
-z-index:100;
-}
-
-.hero{
-text-align:center;
-padding:100px 20px 70px;
-}
-
-.hero h1{
-font-size:70px;
-font-weight:800;
-margin-bottom:10px;
-}
-
-.hero p{
-font-size:20px;
-opacity:.75;
-}
-
-.section{
-max-width:1200px;
-margin:auto;
-padding:40px 20px;
-}
-
-.title{
-font-size:45px;
-font-weight:800;
-text-align:center;
-margin-bottom:35px;
-}
-
-#carsContainer{
 display:flex;
-flex-direction:column;
-gap:30px;
-}
-
-.car-card{
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(30px);
--webkit-backdrop-filter:blur(30px);
-
-border:1px solid rgba(255,255,255,.12);
-border-radius:30px;
-
+justify-content:center;
+align-items:center;
+min-height:100vh;
 padding:20px;
-
-box-shadow:
-0 10px 40px rgba(0,0,0,.3);
 }
 
-.car-card img{
-  width:100%;
-  aspect-ratio:9/16;
-  object-fit:cover;
-  border-radius:20px;
-  margin-bottom:20px;
-  display:block;
+.card{
+width:100%;
+max-width:500px;
+background:#151515;
+padding:30px;
+border-radius:25px;
+border:1px solid #333;
 }
 
-.car-name{
-font-size:34px;
-font-weight:800;
-margin-bottom:10px;
+h1{
+text-align:center;
+margin-bottom:25px;
 }
 
-.price{
-font-size:38px;
-font-weight:800;
-color:#c084fc;
-margin-bottom:20px;
-}
-
-.buy-btn{
-display:inline-block;
-
-padding:15px 28px;
-
-background:linear-gradient(
-135deg,
-#c084fc,
-#8b5cf6
-);
-
+input{
+width:100%;
+padding:15px;
+margin-bottom:15px;
+border:none;
+border-radius:12px;
+background:#222;
 color:white;
-text-decoration:none;
-font-weight:700;
-
-border-radius:15px;
-
-transition:.3s;
 }
 
-.buy-btn:hover{
-transform:translateY(-3px);
-}
-
-.loading{
-text-align:center;
-font-size:20px;
-opacity:.7;
-}
-
-.footer{
-padding:40px;
-text-align:center;
-opacity:.6;
-}
-
-@media(max-width:768px){
-
-.hero h1{
-font-size:50px;
-}
-
-.title{
-font-size:35px;
-}
-
-.car-name{
-font-size:26px;
-}
-
-.price{
-font-size:30px;
-}
-
-}
-.sold-badge{
-background:red;
+button{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+background:#8b5cf6;
 color:white;
-padding:18px;
-border-radius:18px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
+}
+
+#status{
+margin-top:15px;
 text-align:center;
-font-weight:800;
 }
 </style>
 </head>
 <body>
 
-<div class="navbar">
-86AutoPro
-</div>
+<div class="card">
 
-<section class="hero">
+<h1>86AutoPro Admin</h1>
 
-<h1>86AutoPro</h1>
+<input
+type="text"
+id="name"
+placeholder="Car Name">
 
-<p>Premium Car Parking Multiplayer Marketplace</p>
+<input
+type="number"
+id="price"
+placeholder="Car Price">
 
-</section>
+<input
+type="file"
+id="image"
+accept="image/*">
 
-<section class="section">
+<button onclick="uploadCar()">
+Add Car
+</button>
 
-<h2 class="title">
-Available Cars
-</h2>
+<div id="status"></div>
 
-<div id="carsContainer">
-
-<div class="loading">
-Loading cars...
-</div>
-
-</div>
-
-</section>
-
-<div class="footer">
-86AutoPro © 2026
 </div>
 
 <script type="module">
 
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-const supabase = createClient(
-"https://juwpebbsyeixiaxqhvok.supabase.co",
-"sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
+const SUPABASE_URL =
+"https://juwpebbsyeixiaxqhvok.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv";
+
+const supabase =
+createClient(
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
-async function loadCars(){
+window.uploadCar = async () => {
 
-const container =
-document.getElementById("carsContainer");
+const name =
+document.getElementById("name").value;
 
-const { data, error } =
+const price =
+document.getElementById("price").value;
+
+const file =
+document.getElementById("image").files[0];
+
+if(!name || !price || !file){
+alert("Fill all fields");
+return;
+}
+
+document.getElementById("status").innerText =
+"Uploading...";
+
+const fileName =
+Date.now() + "-" + file.name;
+
+const { error: uploadError } =
+await supabase.storage
+.from("cars")
+.upload(fileName,file);
+
+if(uploadError){
+alert(uploadError.message);
+return;
+}
+
+const imageUrl =
+`${SUPABASE_URL}/storage/v1/object/public/cars/${fileName}`;
+
+const { error } =
 await supabase
 .from("cars")
-.select("*")
-.order("id",{ascending:false});
-
+.insert([
+{
+name:name,
+price:price,
+image:imageUrl
+}
+]);
 
 if(error){
-
-container.innerHTML = `
-<div class="loading">
-Error loading cars
-</div>
-`;
-
-console.error(error);
+alert(error.message);
 return;
 }
 
-if(!data || data.length === 0){
+document.getElementById("status").innerText =
+"Car Added Successfully ✅";
 
-container.innerHTML = `
-<div class="loading">
-No cars available
-</div>
-`;
-
-return;
-}
-
-container.innerHTML = "";
-
-data.forEach(car=>{
-
-container.innerHTML += `
-
-<div class="car-card">
-
-<img src="${car.image}" alt="${car.name}">
-
-<h2 class="car-name">
-${car.name}
-</h2>
-
-<div class="price">
-₹${car.price}
-</div>
-
-${car.status === "sold"
-? '<div class="sold-badge">SOLD OUT</div>'
-: '<a href="https://tally.so/r/Y56RNB" target="_blank" class="buy-btn">BUY NOW</a>'
-}
-</div>
-
-`;
-
-});
-
-}
-
-
-loadCars();
+document.getElementById("name").value="";
+document.getElementById("price").value="";
+document.getElementById("image").value="";
+};
 
 </script>
 
