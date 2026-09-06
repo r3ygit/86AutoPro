@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>86AutoPro Admin</title>
+<title>86AutoPro</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+
 *{
 margin:0;
 padding:0;
@@ -19,11 +20,7 @@ body{
 background:#050505;
 color:white;
 min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
-overflow:hidden;
+overflow-x:hidden;
 }
 
 body::before{
@@ -50,44 +47,100 @@ left:-250px;
 z-index:-1;
 }
 
-.card{
-width:100%;
-max-width:550px;
+.navbar{
+position:sticky;
+top:15px;
+margin:15px;
+padding:18px;
+text-align:center;
+font-size:30px;
+font-weight:800;
 
 background:rgba(255,255,255,.08);
 backdrop-filter:blur(30px);
+-webkit-backdrop-filter:blur(30px);
+
+border:1px solid rgba(255,255,255,.12);
+border-radius:25px;
+
+z-index:100;
+}
+
+.hero{
+text-align:center;
+padding:100px 20px 70px;
+}
+
+.hero h1{
+font-size:70px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:20px;
+opacity:.75;
+}
+
+.section{
+max-width:1200px;
+margin:auto;
+padding:40px 20px;
+}
+
+.title{
+font-size:45px;
+font-weight:800;
+text-align:center;
+margin-bottom:35px;
+}
+
+#carsContainer{
+display:flex;
+flex-direction:column;
+gap:30px;
+}
+
+.car-card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(30px);
+-webkit-backdrop-filter:blur(30px);
 
 border:1px solid rgba(255,255,255,.12);
 border-radius:30px;
 
-padding:25px;
+padding:20px;
+
+box-shadow:
+0 10px 40px rgba(0,0,0,.3);
 }
 
-h1{
-text-align:center;
-margin-bottom:20px;
-font-size:32px;
+.car-card img{
+  width:100%;
+  aspect-ratio:9/16;
+  object-fit:cover;
+  border-radius:20px;
+  margin-bottom:20px;
+  display:block;
+}
+
+.car-name{
+font-size:34px;
 font-weight:800;
+margin-bottom:10px;
 }
 
-input{
-width:100%;
-padding:16px;
-margin-bottom:15px;
-
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.12);
-
-border-radius:15px;
-color:white;
+.price{
+font-size:38px;
+font-weight:800;
+color:#c084fc;
+margin-bottom:20px;
 }
 
-button{
-width:100%;
-padding:16px;
+.buy-btn{
+display:inline-block;
 
-border:none;
-border-radius:15px;
+padding:15px 28px;
 
 background:linear-gradient(
 135deg,
@@ -96,132 +149,169 @@ background:linear-gradient(
 );
 
 color:white;
-font-size:16px;
+text-decoration:none;
 font-weight:700;
 
-cursor:pointer;
+border-radius:15px;
+
+transition:.3s;
 }
 
-.status{
-margin-top:15px;
+.buy-btn:hover{
+transform:translateY(-3px);
+}
+
+.loading{
 text-align:center;
-font-weight:600;
+font-size:20px;
+opacity:.7;
+}
+
+.footer{
+padding:40px;
+text-align:center;
+opacity:.6;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:50px;
+}
+
+.title{
+font-size:35px;
+}
+
+.car-name{
+font-size:26px;
+}
+
+.price{
+font-size:30px;
+}
+
+}
+.sold-badge{
+background:red;
+color:white;
+padding:18px;
+border-radius:18px;
+text-align:center;
+font-weight:800;
 }
 </style>
 </head>
 <body>
 
-<div class="card">
+<div class="navbar">
+86AutoPro
+</div>
 
-<h1>Add Car</h1>
+<section class="hero">
 
-<input
-id="name"
-placeholder="Car Name">
+<h1>86AutoPro</h1>
 
-<input
-id="price"
-placeholder="Price">
+<p>Premium Car Parking Multiplayer Marketplace</p>
 
-<input
-type="file"
-id="photo"
-accept="image/*">
+</section>
 
-<button onclick="addCar()">
-Upload Car
-</button>
+<section class="section">
 
-<div id="status" class="status"></div>
+<h2 class="title">
+Available Cars
+</h2>
 
+<div id="carsContainer">
+
+<div class="loading">
+Loading cars...
+</div>
+
+</div>
+
+</section>
+
+<div class="footer">
+86AutoPro © 2026
 </div>
 
 <script type="module">
 
-import { createClient }
-from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabase = createClient(
 "https://juwpebbsyeixiaxqhvok.supabase.co",
 "sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
 );
 
-window.addCar = async function(){
+async function loadCars(){
 
-const name =
-document.getElementById("name").value;
+const container =
+document.getElementById("carsContainer");
 
-const price =
-document.getElementById("price").value;
-
-const file =
-document.getElementById("photo").files[0];
-
-const status =
-document.getElementById("status");
-
-if(!name || !price || !file){
-
-status.innerHTML =
-"❌ Fill all fields";
-
-return;
-}
-
-status.innerHTML =
-"📤 Uploading image...";
-
-const fileName =
-Date.now() + "-" + file.name;
-
-const { error: uploadError } =
-await supabase.storage
-.from("cars")
-.upload(fileName,file);
-
-if(uploadError){
-
-status.innerHTML =
-"❌ Upload failed";
-
-console.log(uploadError);
-
-return;
-}
-
-const imageUrl =
-
-`https://juwpebbsyeixiaxqhvok.supabase.co/storage/v1/object/public/cars/${fileName}`;
-
-const { error: dbError } =
+const { data, error } =
 await supabase
 .from("cars")
-.insert([
-{
-name,
-price,
-image:imageUrl
+.select("*")
+.order("id",{ascending:false});
+
+
+if(error){
+
+container.innerHTML = `
+<div class="loading">
+Error loading cars
+</div>
+`;
+
+console.error(error);
+return;
 }
-]);
 
-if(dbError){
+if(!data || data.length === 0){
 
-status.innerHTML =
-"❌ Database save failed";
-
-console.log(dbError);
+container.innerHTML = `
+<div class="loading">
+No cars available
+</div>
+`;
 
 return;
 }
 
-status.innerHTML =
-"✅ Car Added Successfully";
+container.innerHTML = "";
 
-document.getElementById("name").value="";
-document.getElementById("price").value="";
-document.getElementById("photo").value="";
+data.forEach(car=>{
 
-};
+container.innerHTML += `
+
+<div class="car-card">
+
+<img src="${car.image}" alt="${car.name}">
+
+<h2 class="car-name">
+${car.name}
+</h2>
+
+<div class="price">
+₹${car.price}
+</div>
+
+${car.status === "sold"
+? '<div class="sold-badge">SOLD OUT</div>'
+: '<a href="https://tally.so/r/Y56RNB" target="_blank" class="buy-btn">BUY NOW</a>'
+}
+</div>
+
+`;
+
+});
+
+}
+
+
+loadCars();
 
 </script>
 
