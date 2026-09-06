@@ -1,52 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>86AutoPro Admin</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
 body{
 background:#050505;
 color:white;
-font-family:Inter,sans-serif;
+min-height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-min-height:100vh;
-margin:0;
+padding:20px;
+overflow:hidden;
+}
+
+body::before{
+content:'';
+position:fixed;
+width:700px;
+height:700px;
+background:#8b5cf640;
+filter:blur(220px);
+top:-250px;
+right:-250px;
+z-index:-1;
+}
+
+body::after{
+content:'';
+position:fixed;
+width:700px;
+height:700px;
+background:#a855f740;
+filter:blur(220px);
+bottom:-250px;
+left:-250px;
+z-index:-1;
 }
 
 .card{
-width:400px;
+width:100%;
+max-width:550px;
+
 background:rgba(255,255,255,.08);
-backdrop-filter:blur(25px);
+backdrop-filter:blur(30px);
+
+border:1px solid rgba(255,255,255,.12);
+border-radius:30px;
+
 padding:25px;
-border-radius:25px;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+font-size:32px;
+font-weight:800;
 }
 
 input{
 width:100%;
-padding:14px;
-margin:10px 0;
-border:none;
-border-radius:12px;
-box-sizing:border-box;
+padding:16px;
+margin-bottom:15px;
+
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.12);
+
+border-radius:15px;
+color:white;
 }
 
 button{
 width:100%;
-padding:14px;
+padding:16px;
+
 border:none;
-border-radius:12px;
-font-weight:bold;
+border-radius:15px;
+
+background:linear-gradient(
+135deg,
+#c084fc,
+#8b5cf6
+);
+
+color:white;
+font-size:16px;
+font-weight:700;
+
 cursor:pointer;
 }
 
-#loginBox,#uploadBox{
-display:flex;
-flex-direction:column;
-gap:10px;
+.status{
+margin-top:15px;
+text-align:center;
+font-weight:600;
 }
 </style>
 </head>
@@ -54,28 +113,26 @@ gap:10px;
 
 <div class="card">
 
-<div id="loginBox">
+<h1>Add Car</h1>
 
-<h2>Admin Login</h2>
+<input
+id="name"
+placeholder="Car Name">
 
-<input id="email" type="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
+<input
+id="price"
+placeholder="Price">
 
-<button onclick="login()">Login</button>
+<input
+type="file"
+id="photo"
+accept="image/*">
 
-</div>
+<button onclick="addCar()">
+Upload Car
+</button>
 
-<div id="uploadBox" style="display:none;">
-
-<h2>Add Car</h2>
-
-<input id="carName" placeholder="Car Name">
-<input id="carPrice" placeholder="Price">
-<input id="carImage" type="file" accept="image/*">
-
-<button onclick="addCar()">Add Car</button>
-
-</div>
+<div id="status" class="status"></div>
 
 </div>
 
@@ -86,84 +143,83 @@ from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
 const supabase = createClient(
 "https://juwpebbsyeixiaxqhvok.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1d3BlYmJzeWVpeGlheHFodm9rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg1OTkwNTAsImV4cCI6MjEwNDE3NTA1MH0.ucbnOyAsh1Ht2Uql5WHRfsLzzQrdyUBzaBGUwW-h46c"
+"sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
 );
 
-window.login = async () => {
+window.addCar = async function(){
 
-const email =
-document.getElementById("email").value;
+const name =
+document.getElementById("name").value;
 
-const password =
-document.getElementById("password").value;
+const price =
+document.getElementById("price").value;
 
-const { error } =
-await supabase.auth.signInWithPassword({
-email,
-password
-});
+const file =
+document.getElementById("photo").files[0];
 
-if(error){
-alert(error.message);
+const status =
+document.getElementById("status");
+
+if(!name || !price || !file){
+
+status.innerHTML =
+"❌ Fill all fields";
+
 return;
 }
 
-document.getElementById("loginBox").style.display="none";
-document.getElementById("uploadBox").style.display="flex";
-
-};
-
-window.addCar = async () => {
-
-const name =
-document.getElementById("carName").value;
-
-const price =
-document.getElementById("carPrice").value;
-
-const file =
-document.getElementById("carImage").files[0];
+status.innerHTML =
+"📤 Uploading image...";
 
 const fileName =
-Date.now()+"-"+file.name;
+Date.now() + "-" + file.name;
 
-const { error:uploadError } =
+const { error: uploadError } =
 await supabase.storage
 .from("cars")
 .upload(fileName,file);
 
 if(uploadError){
-alert(uploadError.message);
+
+status.innerHTML =
+"❌ Upload failed";
+
+console.log(uploadError);
+
 return;
 }
 
-const { data:urlData } =
-supabase.storage
-.from("cars")
-.getPublicUrl(fileName);
+const imageUrl =
 
-const image =
-urlData.publicUrl;
+`https://juwpebbsyeixiaxqhvok.supabase.co/storage/v1/object/public/cars/${fileName}`;
 
-const { error } =
+const { error: dbError } =
 await supabase
 .from("cars")
-.insert([{
+.insert([
+{
 name,
 price,
-image
-}]);
+image:imageUrl
+}
+]);
 
-if(error){
-alert(error.message);
+if(dbError){
+
+status.innerHTML =
+"❌ Database save failed";
+
+console.log(dbError);
+
 return;
 }
 
-alert("Car Added!");
+status.innerHTML =
+"✅ Car Added Successfully";
 
-document.getElementById("carName").value="";
-document.getElementById("carPrice").value="";
-document.getElementById("carImage").value="";
+document.getElementById("name").value="";
+document.getElementById("price").value="";
+document.getElementById("photo").value="";
 
 };
 
