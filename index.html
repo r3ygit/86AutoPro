@@ -249,6 +249,8 @@ await supabase
 .select("*")
 .order("id",{ascending:false});
 
+alert("DATA: " + JSON.stringify(data));
+alert("ERROR: " + JSON.stringify(error));
 if(error){
 
 container.innerHTML = `
