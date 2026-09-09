@@ -66,6 +66,24 @@ opacity:.9;
 margin-top:15px;
 text-align:center;
 }
+#carsList{
+margin-top:20px;
+}
+
+.car-item{
+background:#222;
+padding:15px;
+border-radius:12px;
+margin-bottom:10px;
+}
+
+.action-btn{
+width:auto;
+padding:10px 15px;
+margin-right:10px;
+margin-top:10px;
+}
+
 </style>
 </head>
 <body>
@@ -92,7 +110,9 @@ accept="image/*">
 <button onclick="uploadCar()">
 Add Car
 </button>
+<h2 style="margin-top:25px;">Cars</h2>
 
+<div id="carsList"></div>
 <div id="status"></div>
 
 </div>
@@ -113,7 +133,58 @@ createClient(
 SUPABASE_URL,
 SUPABASE_KEY
 );
+async function loadCars(){
 
+const { data, error } =
+await supabase
+.from("cars")
+.select("*")
+.order("id",{ascending:false});
+
+if(error) return;
+
+const carsList =
+document.getElementById("carsList");
+
+carsList.innerHTML = "";
+
+data.forEach(car=>{
+
+carsList.innerHTML += `
+<div class="car-item">
+
+<b>${car.name}</b><br>
+₹${car.price}
+
+<br>
+
+<button
+class="action-btn"
+onclick="deleteCar(${car.id})">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+}
+
+window.deleteCar = async (id)=>{
+
+const ok =
+confirm("Delete this car?");
+
+if(!ok) return;
+
+await supabase
+.from("cars")
+.delete()
+.eq("id",id);
+
+loadCars();
+};
 window.uploadCar = async () => {
 
 const name =
@@ -171,8 +242,9 @@ document.getElementById("status").innerText =
 document.getElementById("name").value="";
 document.getElementById("price").value="";
 document.getElementById("image").value="";
+loadCars();
 };
-
+loadCars();
 </script>
 
 </body>
