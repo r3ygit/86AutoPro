@@ -209,6 +209,30 @@ border-radius:15px;
 font-weight:700;
 display:inline-block;
 }
+.car-card{
+position:relative;
+}
+
+.status-badge{
+position:absolute;
+top:35px;
+right:35px;
+padding:12px 24px;
+border-radius:999px;
+font-weight:700;
+font-size:16px;
+z-index:10;
+}
+
+.available{
+background:#16a34a;
+color:white;
+}
+
+.sold{
+background:#dc2626;
+color:white;
+}
 </style>
 </head>
 <body>
@@ -298,6 +322,10 @@ container.innerHTML += `
 
 <div class="car-card">
 
+<div class="status-badge ${car.status === 'sold' ? 'sold' : 'available'}">
+${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
+</div>
+
 <img src="${car.image}" alt="${car.name}">
 
 <h2 class="car-name">
@@ -309,8 +337,15 @@ ${car.name}
 </div>
 
 ${car.status === "sold"
-? '<div class="sold-badge">SOLD OUT</div>'
-: '<a href="https://tally.so/r/Y56RNB" target="_blank" class="available-badge">AVAILABLE</a>'
+? ''
+: `
+<a
+href="https://tally.so/r/Y56RNB"
+target="_blank"
+class="buy-btn">
+BUY NOW
+</a>
+`
 }
 
 </div>
