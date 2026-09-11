@@ -145,41 +145,24 @@ object-fit:cover;
 border-radius:20px;
 scroll-snap-align:center;
 }
-  .gallery-wrapper{
-position:relative;
+.gallery-controls{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-bottom:20px;
 }
 
-.gallery{
-scrollbar-width:none;
-}
-
-.gallery::-webkit-scrollbar{
-display:none;
-}
-
-.gallery-btn{
-position:absolute;
-top:50%;
-transform:translateY(-50%);
-width:50px;
-height:50px;
+.gallery-controls button{
+width:55px;
+height:55px;
 border:none;
 border-radius:50%;
-background:rgba(0,0,0,.6);
+background:rgba(255,255,255,.12);
 backdrop-filter:blur(20px);
 color:white;
-font-size:28px;
+font-size:24px;
 font-weight:700;
 cursor:pointer;
-z-index:20;
-}
-
-.prev{
-left:12px;
-}
-
-.next{
-right:12px;
 }
 .car-name{
 font-size:34px;
@@ -438,7 +421,7 @@ onclick="this.nextElementSibling.scrollBy({left:-350,behavior:'smooth'})">
 ‹
 </button>
 
-<div class="gallery">
+<div class="gallery" id="gallery${car.id}">
 
 <img src="${car.image}" alt="${car.name}">
 
@@ -449,6 +432,24 @@ ${car.image2 ? `
 ${car.image3 ? `
 <img src="${car.image3}" alt="${car.name}">
 ` : ''}
+
+</div>
+
+<div class="gallery-controls">
+
+<button onclick="
+document.getElementById('gallery${car.id}')
+.scrollBy({left:-350,behavior:'smooth'})
+">
+⬅
+</button>
+
+<button onclick="
+document.getElementById('gallery${car.id}')
+.scrollBy({left:350,behavior:'smooth'})
+">
+➡
+</button>
 
 </div>
 
