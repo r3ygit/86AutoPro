@@ -145,6 +145,42 @@ object-fit:cover;
 border-radius:20px;
 scroll-snap-align:center;
 }
+  .gallery-wrapper{
+position:relative;
+}
+
+.gallery{
+scrollbar-width:none;
+}
+
+.gallery::-webkit-scrollbar{
+display:none;
+}
+
+.gallery-btn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:50px;
+height:50px;
+border:none;
+border-radius:50%;
+background:rgba(0,0,0,.6);
+backdrop-filter:blur(20px);
+color:white;
+font-size:28px;
+font-weight:700;
+cursor:pointer;
+z-index:20;
+}
+
+.prev{
+left:12px;
+}
+
+.next{
+right:12px;
+}
 .car-name{
 font-size:34px;
 font-weight:800;
@@ -395,6 +431,13 @@ container.innerHTML += `
 ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
 </div>
 
+<div class="gallery-wrapper">
+
+<button class="gallery-btn prev"
+onclick="this.nextElementSibling.scrollBy({left:-350,behavior:'smooth'})">
+‹
+</button>
+
 <div class="gallery">
 
 <img src="${car.image}" alt="${car.name}">
@@ -406,6 +449,13 @@ ${car.image2 ? `
 ${car.image3 ? `
 <img src="${car.image3}" alt="${car.name}">
 ` : ''}
+
+</div>
+
+<button class="gallery-btn next"
+onclick="this.previousElementSibling.scrollBy({left:350,behavior:'smooth'})">
+›
+</button>
 
 </div>
 
