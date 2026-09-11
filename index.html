@@ -129,15 +129,22 @@ box-shadow:
 0 10px 40px rgba(0,0,0,.3);
 }
 
-.car-card img{
-  width:100%;
-  aspect-ratio:9/16;
-  object-fit:cover;
-  border-radius:20px;
-  margin-bottom:20px;
-  display:block;
+.gallery{
+display:flex;
+gap:12px;
+overflow-x:auto;
+scroll-snap-type:x mandatory;
+margin-bottom:20px;
 }
 
+.gallery img{
+width:100%;
+min-width:100%;
+aspect-ratio:9/16;
+object-fit:cover;
+border-radius:20px;
+scroll-snap-align:center;
+}
 .car-name{
 font-size:34px;
 font-weight:800;
@@ -388,7 +395,19 @@ container.innerHTML += `
 ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
 </div>
 
+<div class="gallery">
+
 <img src="${car.image}" alt="${car.name}">
+
+${car.image2 ? `
+<img src="${car.image2}" alt="${car.name}">
+` : ''}
+
+${car.image3 ? `
+<img src="${car.image3}" alt="${car.name}">
+` : ''}
+
+</div>
 
 <h2 class="car-name">
 ${car.name}
