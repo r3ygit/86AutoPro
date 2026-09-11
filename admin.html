@@ -111,6 +111,15 @@ placeholder="Car Price">
 type="file"
 id="image"
 accept="image/*">
+  <input
+type="file"
+id="image2"
+accept="image/*">
+
+<input
+type="file"
+id="image3"
+accept="image/*">
 
 <button onclick="uploadCar()">
 Add Car
@@ -118,7 +127,7 @@ Add Car
 <h2 style="margin-top:25px;">Cars</h2>
 
 <div id="carsList"></div>
-<div id="status"></div>
+<div id="message"></div>
 
 </div>
 
@@ -201,11 +210,16 @@ document.getElementById("price").value;
 const file =
 document.getElementById("image").files[0];
 
+const file2 =
+document.getElementById("image2").files[0];
+
+const file3 =
+document.getElementById("image3").files[0];
+
 if(!name || !price || !file){
-alert("Fill all fields");
+alert("Name, Price and Main Image required");
 return;
 }
-
 document.getElementById("status").innerText =
 "Uploading...";
 
@@ -224,15 +238,51 @@ return;
 
 const imageUrl =
 `${SUPABASE_URL}/storage/v1/object/public/cars/${fileName}`;
+  let imageUrl2 = null;
+let imageUrl3 = null;
+
+if(file2){
+
+const fileName2 =
+Date.now() + "-2-" + file2.name;
+
+await supabase.storage
+.from("cars")
+.upload(fileName2,file2);
+
+imageUrl2 =
+`${SUPABASE_URL}/storage/v1/object/public/cars/${fileName2}`;
+
+}
+
+if(file3){
+
+const fileName3 =
+Date.now() + "-3-" + file3.name;
+
+await supabase.storage
+.from("cars")
+.upload(fileName3,file3);
+
+imageUrl3 =
+`${SUPABASE_URL}/storage/v1/object/public/cars/${fileName3}`;
+
+}
 
 const { error } =
 await supabase
 .from("cars")
 .insert([
 {
+{
 name:name,
 price:price,
-image:imageUrl
+status:
+document.getElementById("status").value,
+
+image:imageUrl,
+image2:imageUrl2,
+image3:imageUrl3
 }
 ]);
 
@@ -247,6 +297,8 @@ document.getElementById("status").innerText =
 document.getElementById("name").value="";
 document.getElementById("price").value="";
 document.getElementById("image").value="";
+  document.getElementById("image2").value="";
+document.getElementById("image3").value="";
 loadCars();
 };
 loadCars();
