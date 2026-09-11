@@ -220,7 +220,7 @@ if(!name || !price || !file){
 alert("Name, Price and Main Image required");
 return;
 }
-document.getElementById("status").innerText =
+document.getElementById("message").innerText =
 "Uploading...";
 
 const fileName =
@@ -274,7 +274,6 @@ await supabase
 .from("cars")
 .insert([
 {
-{
 name:name,
 price:price,
 status:
@@ -291,9 +290,8 @@ alert(error.message);
 return;
 }
 
-document.getElementById("status").innerText =
+document.getElementById("message").innerText =
 "Car Added Successfully ✅";
-
 document.getElementById("name").value="";
 document.getElementById("price").value="";
 document.getElementById("image").value="";
