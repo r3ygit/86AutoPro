@@ -164,6 +164,28 @@ font-size:24px;
 font-weight:700;
 cursor:pointer;
 }
+.main-car-image{
+width:100%;
+aspect-ratio:9/16;
+object-fit:cover;
+border-radius:20px;
+margin-bottom:15px;
+}
+
+.gallery-open-btn{
+display:block;
+width:100%;
+padding:14px;
+margin-bottom:15px;
+border:none;
+border-radius:15px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+color:white;
+font-weight:700;
+cursor:pointer;
+}
 .car-name{
 font-size:34px;
 font-weight:800;
@@ -321,6 +343,47 @@ transform:translateY(-8px);
 box-shadow:
 0 20px 80px rgba(255,140,0,.18);
 }
+.gallery-modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.95);
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+}
+
+.gallery-modal img{
+width:90%;
+max-width:500px;
+max-height:80vh;
+object-fit:contain;
+border-radius:20px;
+}
+
+.gallery-nav{
+display:flex;
+gap:20px;
+margin-top:20px;
+}
+
+.gallery-nav button,
+.close-gallery{
+padding:15px 20px;
+border:none;
+border-radius:15px;
+background:#ff7a00;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+.close-gallery{
+position:absolute;
+top:20px;
+right:20px;
+}
 </style>
 </head>
 <body>
@@ -414,51 +477,21 @@ container.innerHTML += `
 ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
 </div>
 
-<div class="gallery-wrapper">
+<img src="${car.image}" alt="${car.name}" class="main-car-image">
 
-<button class="gallery-btn prev"
-onclick="this.nextElementSibling.scrollBy({left:-350,behavior:'smooth'})">
-‹
+${car.image2 || car.image3 ? `
+
+<button
+class="gallery-open-btn"
+onclick="openGallery(
+'${car.image}',
+'${car.image2 || ""}',
+'${car.image3 || ""}'
+)">
+📸 View Gallery
 </button>
 
-<div class="gallery" id="gallery${car.id}">
-
-<img src="${car.image}" alt="${car.name}">
-
-${car.image2 ? `
-<img src="${car.image2}" alt="${car.name}">
 ` : ''}
-
-${car.image3 ? `
-<img src="${car.image3}" alt="${car.name}">
-` : ''}
-
-</div>
-
-<div class="gallery-controls">
-
-<button onclick="
-document.getElementById('gallery${car.id}')
-.scrollBy({left:-350,behavior:'smooth'})
-">
-⬅
-</button>
-
-<button onclick="
-document.getElementById('gallery${car.id}')
-.scrollBy({left:350,behavior:'smooth'})
-">
-➡
-</button>
-
-</div>
-
-<button class="gallery-btn next"
-onclick="this.previousElementSibling.scrollBy({left:350,behavior:'smooth'})">
-›
-</button>
-
-</div>
 
 <h2 class="car-name">
 ${car.name}
@@ -488,10 +521,74 @@ BUY NOW
 
 }
 
+let galleryImages = [];
+let currentIndex = 0;
 
+window.openGallery = (...imgs)=>{
+
+galleryImages =
+imgs.filter(img => img && img.trim() !== "");
+
+currentIndex = 0;
+
+document.getElementById("galleryModal").style.display = "flex";
+
+document.getElementById("galleryImage").src =
+galleryImages[currentIndex];
+
+};
+
+window.closeGallery = ()=>{
+
+document.getElementById("galleryModal").style.display = "none";
+
+};
+
+window.nextImage = ()=>{
+
+if(currentIndex < galleryImages.length - 1){
+
+currentIndex++;
+
+document.getElementById("galleryImage").src =
+galleryImages[currentIndex];
+
+}
+
+};
+
+window.prevImage = ()=>{
+
+if(currentIndex > 0){
+
+currentIndex--;
+
+document.getElementById("galleryImage").src =
+galleryImages[currentIndex];
+
+}
+
+};
 loadCars();
 
 </script>
+<div id="galleryModal" class="gallery-modal">
 
+<button class="close-gallery"
+onclick="closeGallery()">
+✕
+</button>
+
+<img id="galleryImage">
+
+<div class="gallery-nav">
+
+<button onclick="prevImage()">⬅</button>
+
+<button onclick="nextImage()">➡</button>
+
+</div>
+
+</div>
 </body>
 </html>
