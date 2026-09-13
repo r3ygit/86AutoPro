@@ -490,7 +490,10 @@ car.name.toLowerCase().includes(search)
 
 container.innerHTML += `
 
-<div class="car-card">
+<div
+class="car-card"
+onclick="window.location.href='car.html?id=${car.id}'"
+style="cursor:pointer;">
 
 <div class="status-badge ${car.status === 'sold' ? 'sold' : 'available'}">
 ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
@@ -498,17 +501,8 @@ ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
 
 <img src="${car.image}" alt="${car.name}" class="main-car-image">
 
-${car.image2 || car.image3 ? `
 
-<button
-class="gallery-open-btn"
-onclick="openGallery(
-'${car.image}',
-'${car.image2 || ""}',
-'${car.image3 || ""}'
-)">
-📸 More photos
-</button>
+
 
 ` : ''}
 
@@ -519,21 +513,7 @@ ${car.name}
 <div class="price">
 ₹${car.price}
 </div>
-<a
-href="car.html?id=${car.id}"
-class="gallery-open-btn"
-style="text-decoration:none;text-align:center;">
-🚗 View Details
-</a>
-${car.status === "sold"
-? ''
-: `
-<a
-href="https://tally.so/r/Y56RNB"
-target="_blank"
-class="buy-btn">
-BUY NOW
-</a>
+
 `
 }
 
@@ -545,52 +525,6 @@ BUY NOW
 
 }
 
-let galleryImages = [];
-let currentIndex = 0;
-
-window.openGallery = (...imgs)=>{
-
-galleryImages =
-imgs.filter(img => img && img.trim() !== "");
-
-currentIndex = 0;
-
-document.getElementById("galleryModal").style.display = "flex";
-
-document.getElementById("galleryImage").src =
-galleryImages[currentIndex];
-
-};
-
-window.closeGallery = ()=>{
-
-document.getElementById("galleryModal").style.display = "none";
-
-};
-
-window.nextImage = ()=>{
-
-if(currentIndex < galleryImages.length - 1){
-
-currentIndex++;
-
-document.getElementById("galleryImage").src =
-galleryImages[currentIndex];
-
-}
-
-};
-
-window.prevImage = ()=>{
-
-if(currentIndex > 0){
-
-currentIndex--;
-
-document.getElementById("galleryImage").src =
-galleryImages[currentIndex];
-
-}
 
 };
 document.getElementById("searchInput")
@@ -600,22 +534,7 @@ loadCars();
 loadCars();
 
 </script>
-<div id="galleryModal" class="gallery-modal">
 
-<button class="close-gallery"
-onclick="closeGallery()">
-✕
-</button>
-
-<img id="galleryImage">
-
-<div class="gallery-nav">
-
-<button onclick="prevImage()">⬅</button>
-
-<button onclick="nextImage()">➡</button>
-
-</div>
 
 </div>
 </body>
