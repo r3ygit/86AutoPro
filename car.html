@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body 
+<body>
 
 <div id="carDetails">
 Loading...
@@ -37,28 +37,126 @@ await supabase
 if(data){
 
 document.getElementById("carDetails").innerHTML = `
-<h2>${data.name}</h2>
 
-<img
-src="${data.image}"
-style="
-width:100%;
-max-width:500px;
-border-radius:20px;
+<div style="
+max-width:900px;
+margin:auto;
+padding:25px;
+color:white;
 ">
 
-<h3>₹${data.price}</h3>
+<a href="index.html"
+style="
+display:inline-block;
+margin-bottom:20px;
+color:#ff8a00;
+text-decoration:none;
+font-weight:700;
+">
+← Back to Marketplace
+</a>
+
+<h1>${data.name}</h1>
+
+<div style="
+font-size:40px;
+font-weight:800;
+color:#ff8a00;
+margin:15px 0;
+">
+₹${data.price}
+</div>
+
+<div style="
+display:inline-block;
+padding:10px 20px;
+border-radius:999px;
+background:${data.status === 'sold' ? '#dc2626' : '#16a34a'};
+font-weight:700;
+margin-bottom:20px;
+">
+${data.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
+</div>
+
+<img src="${data.image}"
+style="
+width:100%;
+border-radius:20px;
+margin-bottom:15px;
+">
+
+${data.image2 ? `
+<img src="${data.image2}"
+style="
+width:100%;
+border-radius:20px;
+margin-bottom:15px;
+">
+` : ''}
+
+${data.image3 ? `
+<img src="${data.image3}"
+style="
+width:100%;
+border-radius:20px;
+margin-bottom:15px;
+">
+` : ''}
+
+<h3>Seller</h3>
+<p>${data.seller || "Not Set"}</p>
+
+<h3>Description</h3>
+<p>${data.description || "No description"}</p>
+
+${data.instagram ? `
+<a
+href="${data.instagram}"
+target="_blank"
+style="
+display:inline-block;
+padding:15px 25px;
+background:#E1306C;
+color:white;
+text-decoration:none;
+border-radius:15px;
+font-weight:700;
+margin-right:10px;
+">
+📸 Contact Seller
+</a>
+` : ''}
+
+${data.status === 'sold'
+? ''
+: `
+<a
+href="https://tally.so/r/Y56RNB"
+target="_blank"
+style="
+display:inline-block;
+padding:15px 25px;
+background:#ff7a00;
+color:white;
+text-decoration:none;
+border-radius:15px;
+font-weight:700;
+">
+🛒 BUY NOW
+</a>
+`
+}
+
+</div>
 `;
 
 }
 
-</script>>
+</script>
 
 
 
-<div id="carDetails">
-Loading...
-</div>
+
 
 </body>
 </html>
