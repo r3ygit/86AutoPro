@@ -110,9 +110,25 @@ margin-bottom:35px;
 }
 
 #carsContainer{
-display:flex;
-flex-direction:column;
-gap:30px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:25px;
+}
+@media(max-width:768px){
+
+#carsContainer{
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+}
+
+.car-name{
+font-size:18px;
+}
+
+.price{
+font-size:20px;
+}
+
 }
 
 .car-card{
@@ -123,7 +139,7 @@ backdrop-filter:blur(30px);
 border:1px solid rgba(255,255,255,.12);
 border-radius:30px;
 
-padding:20px;
+padding:12px;
 
 box-shadow:
 0 10px 40px rgba(0,0,0,.3);
