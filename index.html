@@ -405,7 +405,21 @@ right:20px;
 <h2 class="title">
 Available Cars
 </h2>
-
+<input
+type="text"
+id="searchInput"
+placeholder="🔍 Search Cars..."
+style="
+width:100%;
+padding:18px;
+margin-bottom:25px;
+border:none;
+border-radius:18px;
+background:rgba(255,255,255,.08);
+color:white;
+font-size:16px;
+backdrop-filter:blur(20px);
+">
 <div id="carsContainer">
 
 <div class="loading">
@@ -466,8 +480,13 @@ return;
 }
 
 container.innerHTML = "";
-
-data.forEach(car=>{
+const search =
+document.getElementById("searchInput")?.value?.toLowerCase() || "";
+data
+.filter(car =>
+car.name.toLowerCase().includes(search)
+)
+.forEach(car=>{
 
 container.innerHTML += `
 
