@@ -3,6 +3,47 @@
 <head>
 <title>86AutoPro Car Details</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    body::before{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+background:#ff7a0030;
+filter:blur(180px);
+top:-150px;
+right:-150px;
+z-index:-1;
+}
+
+body::after{
+content:'';
+position:fixed;
+width:500px;
+height:500px;
+background:#ff950020;
+filter:blur(180px);
+bottom:-150px;
+left:-150px;
+z-index:-1;
+}
+body{
+background:#050505;
+color:white;
+font-family:'Inter',sans-serif;
+margin:0;
+padding:25px;
+}
+
+#carDetails{
+max-width:1000px;
+margin:auto;
+}
+
+img{
+display:block;
+}
+</style>
 </head>
 
 <body>
@@ -50,7 +91,13 @@ font-weight:700;
 ← Back to Marketplace
 </a>
 
-<h1>${data.name}</h1>
+<h1 style="
+font-size:48px;
+font-weight:800;
+margin:10px 0;
+">
+${data.name}
+</h1>
 
 <div style="
 font-size:40px;
@@ -65,43 +112,114 @@ margin:15px 0;
 display:inline-block;
 padding:10px 20px;
 border-radius:999px;
-background:${data.status === 'sold' ? '#dc2626' : '#16a34a'};
+background:${data.status === 'sold'
+? 'linear-gradient(135deg,#dc2626,#ff6b6b)'
+: 'linear-gradient(135deg,#16a34a,#4ade80)'};
+box-shadow:${data.status === 'sold'
+? '0 0 20px rgba(220,38,38,.4)'
+: '0 0 20px rgba(22,163,74,.4)'};
 font-weight:700;
 margin-bottom:20px;
 ">
 ${data.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
 </div>
 
-<img src="${data.image}"
+<div style="margin-bottom:20px;">
+
+<img
+id="mainImage"
+src="${data.image}"
 style="
 width:100%;
-border-radius:20px;
+border-radius:25px;
+aspect-ratio:9/16;
+object-fit:cover;
 margin-bottom:15px;
 ">
 
-${data.image2 ? `
-<img src="${data.image2}"
+<div style="
+display:flex;
+gap:10px;
+justify-content:center;
+">
+
+<img
+src="${data.image}"
+onclick="document.getElementById('mainImage').src=this.src"
 style="
-width:100%;
-border-radius:20px;
-margin-bottom:15px;
+width:90px;
+height:160px;
+object-fit:cover;
+border-radius:15px;
+cursor:pointer;
+box-shadow:0 0 15px rgba(255,122,0,.25);
+">
+
+${data.image2 ? `
+<img
+src="${data.image2}"
+onclick="document.getElementById('mainImage').src=this.src"
+style="
+width:90px;
+height:160px;
+object-fit:cover;
+border-radius:15px;
+cursor:pointer;
 ">
 ` : ''}
 
 ${data.image3 ? `
-<img src="${data.image3}"
+<img
+src="${data.image3}"
+onclick="document.getElementById('mainImage').src=this.src"
 style="
-width:100%;
-border-radius:20px;
-margin-bottom:15px;
+width:90px;
+height:160px;
+object-fit:cover;
+border-radius:15px;
+cursor:pointer;
 ">
 ` : ''}
 
-<h3>Seller</h3>
-<p>${data.seller || "Not Set"}</p>
+</div>
 
-<h3>Description</h3>
-<p>${data.description || "No description"}</p>
+</div>
+
+<div style="
+background:rgba(255,255,255,.06);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:25px;
+padding:25px;
+margin:25px 0;
+">
+
+<h3 style="
+margin-top:0;
+color:#ff8a00;
+">
+👤 Seller
+</h3>
+
+<p style="
+font-size:18px;
+font-weight:700;
+">
+${data.seller || "Not Set"}
+</p>
+
+<h3 style="
+color:#ff8a00;
+margin-top:25px;
+">
+📝 Description
+</h3>
+
+<p>
+${data.description || "No description"}
+</p>
+
+</div>
 
 ${data.instagram ? `
 <a
@@ -110,7 +228,8 @@ target="_blank"
 style="
 display:inline-block;
 padding:15px 25px;
-background:#E1306C;
+background:linear-gradient(135deg,#E1306C,#ff6b9d);
+box-shadow:0 0 25px rgba(225,48,108,.45);
 color:white;
 text-decoration:none;
 border-radius:15px;
@@ -130,7 +249,8 @@ target="_blank"
 style="
 display:inline-block;
 padding:15px 25px;
-background:#ff7a00;
+background:linear-gradient(135deg,#ff7a00,#ffb347);
+box-shadow:0 0 30px rgba(255,122,0,.45);
 color:white;
 text-decoration:none;
 border-radius:15px;
