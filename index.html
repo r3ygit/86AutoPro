@@ -519,7 +519,12 @@ ${car.name}
 <div class="price">
 ₹${car.price}
 </div>
-
+<a
+href="car.html?id=${car.id}"
+class="gallery-open-btn"
+style="text-decoration:none;text-align:center;">
+🚗 View Details
+</a>
 ${car.status === "sold"
 ? ''
 : `
