@@ -489,7 +489,6 @@ car.name.toLowerCase().includes(search)
 .forEach(car=>{
 
 container.innerHTML += `
-
 <div
 class="car-card"
 onclick="window.location.href='car.html?id=${car.id}'"
@@ -499,12 +498,10 @@ style="cursor:pointer;">
 ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
 </div>
 
-<img src="${car.image}" alt="${car.name}" class="main-car-image">
-
-
-
-
-
+<img
+src="${car.image}"
+alt="${car.name}"
+class="main-car-image">
 
 <h2 class="car-name">
 ${car.name}
@@ -514,11 +511,7 @@ ${car.name}
 ₹${car.price}
 </div>
 
-`
-}
-
 </div>
-
 `;
 
 });
@@ -526,7 +519,7 @@ ${car.name}
 }
 
 
-};
+
 document.getElementById("searchInput")
 .addEventListener("input", () => {
 loadCars();
