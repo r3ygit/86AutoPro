@@ -128,7 +128,20 @@ accept="image/*">
 type="file"
 id="image3"
 accept="image/*">
+<input
+type="text"
+id="seller"
+placeholder="Seller (R3Y or FEROX)">
 
+<input
+type="text"
+id="instagram"
+placeholder="Instagram Link">
+
+<input
+type="text"
+id="description"
+placeholder="Car Description">
 <button onclick="uploadCar()">
 Add Car
 </button>
@@ -286,6 +299,15 @@ name:name,
 price:price,
 status:
 document.getElementById("status").value,
+
+seller:
+document.getElementById("seller").value,
+
+instagram:
+document.getElementById("instagram").value,
+
+description:
+document.getElementById("description").value,
 
 image:imageUrl,
 image2:imageUrl2,
