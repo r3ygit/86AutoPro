@@ -5,7 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body style="background:#050505;color:white;font-family:Inter,sans-serif;">
+<body <h1>Car Details</h1>
+
+<div id="carDetails">
+Loading...
+</div>
+
+<script type="module">
+
+import { createClient }
+from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+
+const supabase = createClient(
+"https://juwpebbsyeixiaxqhvok.supabase.co",
+"sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
+);
+
+const params =
+new URLSearchParams(window.location.search);
+
+const carId =
+params.get("id");
+
+const { data,error } =
+await supabase
+.from("cars")
+.select("*")
+.eq("id",carId)
+.single();
+
+if(data){
+
+document.getElementById("carDetails").innerHTML = `
+<h2>${data.name}</h2>
+
+<img
+src="${data.image}"
+style="
+width:100%;
+max-width:500px;
+border-radius:20px;
+">
+
+<h3>₹${data.price}</h3>
+`;
+
+}
+
+</script>>
 
 <h1>Car Details Page</h1>
 
