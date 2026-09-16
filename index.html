@@ -604,6 +604,27 @@ window.setFilter = (filter) => {
 
 currentFilter = filter;
 
+document
+.querySelectorAll(".sort-btn")
+.forEach(btn =>
+btn.classList.remove("active")
+);
+
+if(filter === "all"){
+document.querySelectorAll(".sort-btn")[0]
+.classList.add("active");
+}
+
+if(filter === "available"){
+document.querySelectorAll(".sort-btn")[1]
+.classList.add("active");
+}
+
+if(filter === "sold"){
+document.querySelectorAll(".sort-btn")[2]
+.classList.add("active");
+}
+
 loadCars();
 
 };
