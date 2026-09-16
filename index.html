@@ -400,6 +400,44 @@ position:absolute;
 top:20px;
 right:20px;
 }
+.sort-buttons{
+display:flex;
+justify-content:center;
+gap:12px;
+margin-bottom:25px;
+flex-wrap:wrap;
+}
+
+.sort-btn{
+padding:12px 22px;
+border:none;
+border-radius:999px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+color:white;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+box-shadow:
+0 0 25px rgba(255,140,0,.08);
+}
+
+.sort-btn:hover{
+transform:translateY(-2px);
+box-shadow:
+0 0 30px rgba(255,140,0,.25);
+}
+
+.sort-btn.active{
+background:linear-gradient(
+135deg,
+#ff9500,
+#ff5e00
+);
+box-shadow:
+0 0 35px rgba(255,122,0,.45);
+}
 </style>
 </head>
 <body>
@@ -421,20 +459,20 @@ right:20px;
 <h2 class="title">
 Available Cars
 </h2>
-<div id="sortButtons" style="
-display:flex;
-gap:10px;
-justify-content:center;
-margin-bottom:25px;
-">
+<div id="sortButtons" class="sort-buttons">
 
-<button onclick="setFilter('all')">All</button>
+<button class="sort-btn active"
+onclick="setFilter('all')">
+All
+</button>
 
-<button onclick="setFilter('available')">
+<button class="sort-btn"
+onclick="setFilter('available')">
 Available
 </button>
 
-<button onclick="setFilter('sold')">
+<button class="sort-btn"
+onclick="setFilter('sold')">
 Sold Out
 </button>
 
