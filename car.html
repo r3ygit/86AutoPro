@@ -68,13 +68,7 @@ new URLSearchParams(window.location.search);
 const carId =
 params.get("id");
 
-await supabase
-.from("cars")
-.update({
-views:
-supabase.sql`views + 1`
-})
-.eq("id",carId);
+
 
 const { data,error } =
 await supabase
