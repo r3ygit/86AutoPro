@@ -68,6 +68,14 @@ new URLSearchParams(window.location.search);
 const carId =
 params.get("id");
 
+await supabase
+.from("cars")
+.update({
+views:
+supabase.sql`views + 1`
+})
+.eq("id",carId);
+
 const { data,error } =
 await supabase
 .from("cars")
@@ -100,12 +108,11 @@ ${data.name}
 </h1>
 
 <div style="
-font-size:40px;
-font-weight:800;
-color:#ff8a00;
-margin:15px 0;
+margin-bottom:15px;
+opacity:.8;
+font-size:18px;
 ">
-₹${data.price}
+👁️ ${data.views || 0} Views
 </div>
 
 <div style="
