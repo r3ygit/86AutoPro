@@ -260,12 +260,45 @@ font-weight:700;
 </a>
 `
 }
-
+<button
+onclick="shareCar()"
+style="
+display:inline-block;
+padding:15px 25px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(20px);
+color:white;
+border:none;
+border-radius:15px;
+font-weight:700;
+cursor:pointer;
+margin-right:10px;
+">
+🔗 Share Car
+</button>
 </div>
 `;
 
 }
+window.shareCar = async () => {
 
+if(navigator.share){
+
+await navigator.share({
+title: document.title,
+url: window.location.href
+});
+
+}else{
+
+await navigator.clipboard.writeText(
+window.location.href
+);
+
+alert("Car link copied!");
+}
+
+};
 </script>
 
 
