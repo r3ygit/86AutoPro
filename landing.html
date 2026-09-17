@@ -2,36 +2,112 @@
 <html>
 <head>
 <title>86AutoPro</title>
-</head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<body style="
+<style>
+
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
 height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-flex-direction:column;
-background:black;
+background:
+linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
+url('https://kommodo.ai/i/7lktWrkClFNiTaok7t2R');
+
+background-size:cover;
+background-position:center;
+
 color:white;
-font-family:Arial;
-">
+padding:20px;
+}
+
+.hero{
+max-width:700px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(25px);
+
+border:1px solid rgba(255,255,255,.15);
+
+border-radius:30px;
+
+padding:40px;
+
+text-align:center;
+}
+
+h1{
+font-size:60px;
+margin-bottom:10px;
+}
+
+p{
+font-size:18px;
+opacity:.85;
+margin-bottom:25px;
+line-height:1.6;
+}
+
+.btn{
+display:inline-block;
+
+padding:18px 40px;
+
+background:linear-gradient(
+135deg,
+#ff9500,
+#ff5e00
+);
+
+color:white;
+
+text-decoration:none;
+
+font-weight:bold;
+
+border-radius:18px;
+
+box-shadow:
+0 0 30px rgba(255,122,0,.5);
+}
+
+.ticker{
+margin-top:25px;
+color:#00ff88;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="hero">
 
 <h1>86AutoPro</h1>
 
-<p>Premium CPM Marketplace</p>
+<p>
+Discover premium Car Parking Multiplayer vehicles from trusted sellers.
+</p>
 
-<a
-href="index.html"
-style="
-padding:20px 40px;
-background:orange;
-color:white;
-text-decoration:none;
-border-radius:15px;
-font-weight:bold;
-">
+<a href="index.html" class="btn">
 🚗 EXPLORE VEHICLES
 </a>
+
+<div class="ticker">
+Premium CPM Cars • Trusted Sellers • Secure Buying
+</div>
+
+</div>
 
 </body>
 </html>
