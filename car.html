@@ -78,7 +78,14 @@ await supabase
 .single();
 
 if(data){
+await supabase
+.from("cars")
+.update({
+views: (data.views || 0) + 1
+})
+.eq("id", carId);
 
+data.views = (data.views || 0) + 1;
 document.getElementById("carDetails").innerHTML = `
 
 
