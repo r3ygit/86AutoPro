@@ -1,0 +1,9 @@
+{
+  "name": "86AutoPro",
+  "short_name": "86AutoPro",
+  "description": "Premium CPM Marketplace",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#ff7a00"
+}
