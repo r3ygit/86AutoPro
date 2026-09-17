@@ -188,10 +188,29 @@ data.forEach(car=>{
 carsList.innerHTML += `
 <div class="car-item">
 
-<b>${car.name}</b><br>
-₹${car.price}
+<input
+id="name-${car.id}"
+value="${car.name}"
+style="margin-bottom:10px;">
 
-<br>
+<input
+id="price-${car.id}"
+value="${car.price}"
+style="margin-bottom:10px;">
+
+<p>Status: ${car.status}</p>
+
+<button
+class="action-btn"
+onclick="saveCar(${car.id})">
+Save
+</button>
+
+<button
+class="action-btn"
+onclick="toggleStatus(${car.id},'${car.status}')">
+${car.status === 'sold' ? 'Mark Available' : 'Mark Sold'}
+</button>
 
 <button
 class="action-btn"
@@ -219,6 +238,58 @@ await supabase
 .eq("id",id);
 
 loadCars();
+};
+window.deleteCar = async (id)=>{
+
+const ok =
+confirm("Delete this car?");
+
+if(!ok) return;
+
+await supabase
+.from("cars")
+.delete()
+.eq("id",id);
+
+loadCars();
+};
+
+window.saveCar = async (id)=>{
+
+const newName =
+document.getElementById(`name-${id}`).value;
+
+const newPrice =
+document.getElementById(`price-${id}`).value;
+
+await supabase
+.from("cars")
+.update({
+name:newName,
+price:newPrice
+})
+.eq("id",id);
+
+loadCars();
+
+};
+
+window.toggleStatus = async (id,currentStatus)=>{
+
+const newStatus =
+currentStatus === "sold"
+? "available"
+: "sold";
+
+await supabase
+.from("cars")
+.update({
+status:newStatus
+})
+.eq("id",id);
+
+loadCars();
+
 };
 window.uploadCar = async () => {
 
