@@ -6,34 +6,7 @@
 <title>86AutoPro</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-.ticker{
-width:100%;
-overflow:hidden;
-margin-top:15px;
-}
 
-.ticker-content{
-display:inline-block;
-white-space:nowrap;
-color:#00ff88;
-font-weight:700;
-font-size:15px;
-
-animation:scrollTicker 15s linear infinite;
-
-text-shadow:
-0 0 10px #00ff88,
-0 0 20px #00ff88;
-}
-
-@keyframes scrollTicker{
-0%{
-transform:translateX(100%);
-}
-100%{
-transform:translateX(-100%);
-}
-}
 <style>
 
 *{
@@ -464,6 +437,34 @@ background:linear-gradient(
 );
 box-shadow:
 0 0 35px rgba(255,122,0,.45);
+}
+.ticker{
+width:100%;
+overflow:hidden;
+margin-top:15px;
+}
+
+.ticker-content{
+display:inline-block;
+white-space:nowrap;
+color:#00ff88;
+font-weight:700;
+font-size:15px;
+
+animation:scrollTicker 15s linear infinite;
+
+text-shadow:
+0 0 10px #00ff88,
+0 0 20px #00ff88;
+}
+
+@keyframes scrollTicker{
+0%{
+transform:translateX(100%);
+}
+100%{
+transform:translateX(-100%);
+}
 }
 </style>
 </head>
