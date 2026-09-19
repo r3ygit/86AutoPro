@@ -252,8 +252,7 @@ ${data.status === 'sold'
 ? ''
 : `
 <a
-order.html?car=${car.name}&price=${car.price}
-target="_blank"
+href="order.html?car=${encodeURIComponent(data.name)}&price=${data.price}"
 style="
 display:inline-block;
 padding:15px 25px;
@@ -263,7 +262,8 @@ color:white;
 text-decoration:none;
 border-radius:15px;
 font-weight:700;
-">
+"
+>
 🛒 BUY NOW
 </a>
 `
