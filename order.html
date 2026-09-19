@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>86AutoPro Order</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<style>
+
+body{
+background:#050505;
+color:white;
+font-family:Inter,sans-serif;
+padding:20px;
+text-align:center;
+}
+
+.card{
+max-width:500px;
+margin:auto;
+background:rgba(255,255,255,.08);
+padding:25px;
+border-radius:25px;
+}
+
+input{
+width:100%;
+padding:16px;
+margin:10px 0;
+border:none;
+border-radius:15px;
+background:#111;
+color:white;
+}
+
+button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:15px;
+background:#ff7a00;
+color:white;
+font-weight:700;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+}
+
+#paymentStep{
+display:none;
+}
+
+.qr{
+width:100%;
+max-width:320px;
+border-radius:20px;
+margin:20px auto;
+display:block;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="card">
+
+<h1>86AutoPro Order</h1>
+
+<h2 id="carName"></h2>
+
+<div id="formStep">
+
+<input
+id="instagram"
+placeholder="Instagram ID">
+
+<input
+id="cpmid"
+placeholder="CPM ID">
+
+<button onclick="showPayment()">
+NEXT
+</button>
+
+</div>
+
+<div id="paymentStep">
+
+<img src="qr.jpg" class="qr">
+
+<p>
+⚠️ Make sure payment is completed before submitting.
+</p>
+
+<p>
+Are you sure you have paid?
+</p>
+
+<button onclick="submitOrder()">
+SUBMIT ORDER
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+emailjs.init({
+publicKey:"0XlgqGZvdzI9UcgXi"
+});
+
+const params =
+new URLSearchParams(window.location.search);
+
+const car =
+params.get("car");
+
+const price =
+params.get("price");
+
+document.getElementById("carName").innerHTML =
+car + " • ₹" + price;
+
+function showPayment(){
+
+document.getElementById("formStep").style.display="none";
+
+document.getElementById("paymentStep").style.display="block";
+
+}
+
+function submitOrder(){
+
+emailjs.send(
+"service_vooqt6p",
+"template_i3art5p",
+{
+car_name:car,
+price:price,
+instagram_id:
+document.getElementById("instagram").value,
+cpm_id:
+document.getElementById("cpmid").value
+}
+)
+.then(()=>{
+
+alert("Order Submitted!");
+
+window.location.href =
+"https://www.instagram.com/86autopro";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
