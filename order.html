@@ -22,7 +22,7 @@ text-align:center;
 min-height:100vh;
 }
 .card{
-max-width:550px;
+max-width:500px;
 margin:auto;
 
 background:rgba(255,255,255,.08);
@@ -101,7 +101,7 @@ transform:translateY(-3px);
 }
 .qr{
 width:100%;
-max-width:320px;
+max-width:260px;
 border-radius:25px;
 margin:25px auto;
 display:block;
@@ -151,7 +151,7 @@ NEXT
 
 </div>
 
-<div id="paymentStep">
+<div id="paymentStep" style="display:none;">
 
 <img src="qr.jpg" class="qr">
 
@@ -187,44 +187,62 @@ new URLSearchParams(window.location.search);
 const car =
 params.get("car");
 
-const price =
-params.get("price");
+document.getElementById("carName").innerHTML =
+car + " • ₹" + price;
 
 document.getElementById("payAmount").textContent = price;
 
 function showPayment(){
 
-document.getElementById("formStep").style.display="none";
+const insta =
+document.getElementById("instagram").value;
 
-document.getElementById("paymentStep").style.display="block";
+const cpm =
+document.getElementById("cpmid").value;
 
+if(!insta || !cpm){
+alert("Please enter Instagram ID and CPM ID");
+return;
 }
 
+document.getElementById("formStep").style.display = "none";
+document.getElementById("paymentStep").style.display = "block";
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
 function submitOrder(){
 
 emailjs.send(
 "service_vooqt6p",
 "template_i3art5p",
 {
-car_name:car,
-price:price,
+car_name: car,
+price: price,
 instagram_id:
 document.getElementById("instagram").value,
 cpm_id:
 document.getElementById("cpmid").value
 }
 )
-.then(()=>{
+.then(() => {
 
-alert("Order Submitted!");
+alert("Order Submitted Successfully!");
 
 window.location.href =
 "https://www.instagram.com/86autopro";
 
+})
+.catch(() => {
+
+alert("Failed to submit order.");
+
 });
 
 }
-
 </script>
 
 </body>
