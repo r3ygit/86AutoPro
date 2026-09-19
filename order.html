@@ -11,54 +11,117 @@
 <style>
 
 body{
-background:#050505;
+background:
+radial-gradient(circle at top right,#ff7a0030,transparent 40%),
+radial-gradient(circle at bottom left,#ff950020,transparent 40%),
+#050505;
 color:white;
-font-family:Inter,sans-serif;
+font-family:'Inter',sans-serif;
 padding:20px;
 text-align:center;
+min-height:100vh;
 }
-
 .card{
-max-width:500px;
+max-width:550px;
 margin:auto;
+
 background:rgba(255,255,255,.08);
-padding:25px;
-border-radius:25px;
+backdrop-filter:blur(30px);
+-webkit-backdrop-filter:blur(30px);
+
+border:1px solid rgba(255,255,255,.12);
+border-radius:35px;
+
+padding:30px;
+
+box-shadow:
+0 20px 80px rgba(255,140,0,.15),
+0 0 60px rgba(255,140,0,.08);
+}
+h1{
+font-size:42px;
+font-weight:800;
+margin-bottom:10px;
 }
 
+h2{
+font-size:24px;
+font-weight:700;
+color:#ff9c2b;
+margin-bottom:25px;
+}
 input{
 width:100%;
-padding:16px;
-margin:10px 0;
+padding:18px;
+margin:12px 0;
+
 border:none;
-border-radius:15px;
-background:#111;
+border-radius:18px;
+
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+
 color:white;
+font-size:16px;
+font-weight:600;
 }
 
+input:focus{
+outline:none;
+box-shadow:
+0 0 20px rgba(255,122,0,.4);
+}
 button{
 width:100%;
-padding:16px;
+padding:18px;
+
 border:none;
-border-radius:15px;
-background:#ff7a00;
+border-radius:18px;
+
+background:linear-gradient(
+135deg,
+#ff9500,
+#ff5e00
+);
+
 color:white;
-font-weight:700;
-font-size:16px;
+font-weight:800;
+font-size:17px;
+
 cursor:pointer;
-margin-top:10px;
+
+box-shadow:
+0 0 35px rgba(255,122,0,.45);
+
+transition:.3s;
 }
 
-#paymentStep{
-display:none;
+button:hover{
+transform:translateY(-3px);
 }
-
 .qr{
 width:100%;
 max-width:320px;
-border-radius:20px;
-margin:20px auto;
+border-radius:25px;
+margin:25px auto;
 display:block;
+
+box-shadow:
+0 0 40px rgba(255,255,255,.1);
+}
+.price-box{
+margin:20px 0;
+padding:18px;
+
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+
+border:1px solid rgba(255,255,255,.12);
+border-radius:20px;
+
+font-size:28px;
+font-weight:800;
+color:#ff8a00;
 }
 
 </style>
@@ -90,15 +153,11 @@ NEXT
 
 <div id="paymentStep">
 
-<button onclick="payNow()">
-💳 CLICK THIS TO PAY
-</button>
-
 <img src="qr.jpg" class="qr">
 
-<p>
-⚠️ If the UPI app does not open, use the QR code above.
-</p>
+<div class="price-box">
+💳 Amount To Pay: ₹<span id="payAmount"></span>
+</div>
 
 <p>
 ⚠️ Make sure payment is completed before submitting.
@@ -108,10 +167,8 @@ NEXT
 Are you sure you have paid?
 </p>
 
-
-}
 <button onclick="submitOrder()">
-✅ SUBMIT ORDER
+SUBMIT ORDER
 </button>
 
 </div>
@@ -121,7 +178,7 @@ Are you sure you have paid?
 <script>
 
 emailjs.init({
-publicKey:"reBhf90INvnNqOLn8"
+publicKey:"0XlgqGZvdzI9UcgXi"
 });
 
 const params =
@@ -133,8 +190,7 @@ params.get("car");
 const price =
 params.get("price");
 
-document.getElementById("carName").innerHTML =
-car + " • ₹" + price;
+document.getElementById("payAmount").textContent = price;
 
 function showPayment(){
 
@@ -143,14 +199,7 @@ document.getElementById("formStep").style.display="none";
 document.getElementById("paymentStep").style.display="block";
 
 }
-function payNow(){
 
-const upiLink =
-`upi://pay?pa=rafanferox89@ybl&pn=86AutoPro&am=${price}&cu=INR`;
-
-window.location.href = upiLink;
-
-}
 function submitOrder(){
 
 emailjs.send(
