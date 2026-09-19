@@ -90,7 +90,15 @@ NEXT
 
 <div id="paymentStep">
 
+<button onclick="payNow()">
+💳 PROCEED TO PAY
+</button>
+
 <img src="qr.jpg" class="qr">
+
+<p>
+⚠️ If the UPI app does not open, use the QR code above.
+</p>
 
 <p>
 ⚠️ Make sure payment is completed before submitting.
@@ -99,9 +107,16 @@ NEXT
 <p>
 Are you sure you have paid?
 </p>
+function payNow(){
 
+const upiLink =
+`upi://pay?pa=rehan8686@fam&pn=86AutoPro&am=${price}&cu=INR`;
+
+window.location.href = upiLink;
+
+}
 <button onclick="submitOrder()">
-SUBMIT ORDER
+✅ SUBMIT ORDER
 </button>
 
 </div>
@@ -111,7 +126,7 @@ SUBMIT ORDER
 <script>
 
 emailjs.init({
-publicKey:"0XlgqGZvdzI9UcgXi"
+publicKey:"reBhf90INvnNqOLn8"
 });
 
 const params =
