@@ -307,10 +307,9 @@ document.getElementById(
 ).style.display = "flex";
 
 })
-.catch(() => {
-
-alert("Failed to submit order.");
-
+.catch((error) => {
+console.log(error);
+alert("Error: " + JSON.stringify(error));
 });
 
 }
