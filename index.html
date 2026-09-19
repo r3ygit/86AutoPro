@@ -478,6 +478,116 @@ transform:translateX(100%);
 transform:translateX(-100%);
 }
 }
+:root{
+  --orange:#ff7a00;
+  --orange2:#ff9500;
+}
+
+body{
+  background:#050505;
+  color:white;
+  font-family:'Inter',sans-serif;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  width:900px;
+  height:900px;
+  background:#ff7a0030;
+  filter:blur(250px);
+  top:-300px;
+  right:-300px;
+  z-index:-1;
+}
+
+body::after{
+  content:'';
+  position:fixed;
+  width:900px;
+  height:900px;
+  background:#ff950020;
+  filter:blur(250px);
+  bottom:-300px;
+  left:-300px;
+  z-index:-1;
+}
+
+.hero h1{
+  font-size:clamp(60px,10vw,120px);
+  font-weight:900;
+  line-height:.9;
+  letter-spacing:-4px;
+
+  background:linear-gradient(
+    180deg,
+    #ffffff,
+    #ffcf99
+  );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  text-shadow:
+  0 0 40px rgba(255,122,0,.3);
+}
+
+.hero-logo{
+  width:220px;
+  border-radius:35px;
+
+  box-shadow:
+  0 0 60px rgba(255,122,0,.5),
+  0 0 120px rgba(255,122,0,.2);
+
+  animation:floatLogo 4s ease-in-out infinite;
+}
+
+@keyframes floatLogo{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+}
+
+.buy-btn{
+  background:linear-gradient(
+  135deg,
+  #ff7a00,
+  #ffb347
+  );
+
+  border:none;
+
+  box-shadow:
+  0 0 35px rgba(255,122,0,.6);
+
+  transition:.35s;
+}
+
+.buy-btn:hover{
+  transform:translateY(-6px) scale(1.05);
+
+  box-shadow:
+  0 0 80px rgba(255,122,0,.9);
+}
+
+.car-card{
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(30px);
+
+  border:1px solid rgba(255,255,255,.1);
+
+  box-shadow:
+  0 0 50px rgba(255,122,0,.1);
+
+  transition:.4s;
+}
+
+.car-card:hover{
+  transform:translateY(-12px);
+
+  box-shadow:
+  0 0 90px rgba(255,122,0,.35);
+}
 </style>
 </head>
 <body>
@@ -490,7 +600,7 @@ transform:translateX(-100%);
 
 <img src="logo.PNG" alt="86AutoPro Logo" class="hero-logo">
 
-<h1>86AutoPro</h1>
+<h1>Own Quality Cars</h1>
 <p>Premium Car Parking Multiplayer Marketplace</p>
 <a
 href="https://www.instagram.com/86autopro"
