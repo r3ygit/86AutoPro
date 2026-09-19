@@ -91,7 +91,7 @@ NEXT
 <div id="paymentStep">
 
 <button onclick="payNow()">
-💳 PROCEED TO PAY
+💳 CLICK THIS TO PAY
 </button>
 
 <img src="qr.jpg" class="qr">
@@ -107,12 +107,7 @@ NEXT
 <p>
 Are you sure you have paid?
 </p>
-function payNow(){
 
-const upiLink =
-`upi://pay?pa=rehan8686@fam&pn=86AutoPro&am=${price}&cu=INR`;
-
-window.location.href = upiLink;
 
 }
 <button onclick="submitOrder()">
@@ -148,7 +143,14 @@ document.getElementById("formStep").style.display="none";
 document.getElementById("paymentStep").style.display="block";
 
 }
+function payNow(){
 
+const upiLink =
+`upi://pay?pa=rehan8686@fam&pn=86AutoPro&am=${price}&cu=INR`;
+
+window.location.href = upiLink;
+
+}
 function submitOrder(){
 
 emailjs.send(
