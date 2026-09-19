@@ -185,12 +185,16 @@ const params =
 new URLSearchParams(window.location.search);
 
 const car =
-params.get("car");
+params.get("car") || "Unknown Car";
+
+const price =
+params.get("price") || "0";
 
 document.getElementById("carName").innerHTML =
-car + " • ₹" + price;
+`${car} • ₹${price}`;
 
-document.getElementById("payAmount").textContent = price;
+document.getElementById("payAmount").innerHTML =
+price;
 
 function showPayment(){
 
