@@ -128,11 +128,17 @@ accept="image/*">
 type="file"
 id="image3"
 accept="image/*">
-<input
-type="text"
-id="seller"
-placeholder="Seller (R3Y or FEROX)">
+<select id="owner">
 
+<option value="r3y">
+R3Y
+</option>
+
+<option value="ferox">
+FEROX
+</option>
+
+</select>
 <input
 type="text"
 id="instagram"
@@ -373,14 +379,15 @@ price:price,
 status:
 document.getElementById("status").value,
 
-seller:
-document.getElementById("seller").value,
-
+owner:
+document.getElementById("owner").value,
 instagram:
 document.getElementById("instagram").value,
 
 description:
 document.getElementById("description").value,
+owner:
+document.getElementById("owner").value,
 
 image:imageUrl,
 image2:imageUrl2,
@@ -399,7 +406,7 @@ document.getElementById("name").value="";
 document.getElementById("price").value="";
 document.getElementById("image").value="";
   document.getElementById("image2").value="";
-document.getElementById("image3").value="";
+document.getElementById("owner").value="r3y";
 loadCars();
 };
 loadCars();
