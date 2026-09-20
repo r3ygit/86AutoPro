@@ -186,7 +186,7 @@ NEXT
 
 <div id="paymentStep" style="display:none;">
 
-<img src="qr.jpg" class="qr">
+<img id="qrImage" class="qr">
 
 <div class="price-box">
 💳 Amount To Pay: ₹<span id="payAmount"></span>
@@ -239,12 +239,18 @@ params.get("car") || "Unknown Car";
 const price =
 params.get("price") || "0";
 
+const owner =
+params.get("owner") || "r3y";
 document.getElementById("carName").innerHTML =
 `${car} • ₹${price}`;
 
 document.getElementById("payAmount").innerHTML =
 price;
-
+if(owner === "r3y"){
+document.getElementById("qrImage").src = "myqr.jpg";
+}else{
+document.getElementById("qrImage").src = "partnerqr.jpg";
+}
 function showPayment(){
 
 const insta =
