@@ -588,6 +588,144 @@ body::after{
   box-shadow:
   0 0 90px rgba(255,122,0,.35);
 }
+    .reviews-section{
+padding:120px 20px;
+position:relative;
+overflow:hidden;
+}
+
+.reviews-wrapper{
+max-width:1200px;
+margin:auto;
+position:relative;
+min-height:600px;
+background:rgba(255,255,255,.03);
+border:1px solid rgba(255,255,255,.08);
+border-radius:40px;
+backdrop-filter:blur(20px);
+padding:60px 20px;
+}
+
+.reviews-title{
+position:absolute;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+font-size:clamp(60px,10vw,130px);
+font-style:italic;
+font-weight:700;
+opacity:.12;
+pointer-events:none;
+text-align:center;
+line-height:.9;
+}
+
+.review-card{
+position:absolute;
+width:320px;
+
+background:rgba(255,255,255,.06);
+
+backdrop-filter:blur(25px);
+-webkit-backdrop-filter:blur(25px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:30px;
+
+padding:25px;
+
+box-shadow:
+0 0 40px rgba(255,122,0,.08);
+
+transition:.4s;
+}
+
+.review-card:hover{
+transform:translateY(-10px);
+box-shadow:
+0 0 60px rgba(255,122,0,.25);
+}
+
+.review-1{
+top:70px;
+right:70px;
+}
+
+.review-2{
+bottom:100px;
+left:70px;
+}
+
+.stars{
+font-size:24px;
+margin-bottom:15px;
+}
+
+.review-card p{
+opacity:.85;
+line-height:1.8;
+margin-bottom:20px;
+}
+
+.review-card span{
+opacity:.65;
+font-size:14px;
+}
+
+.reviews-stats{
+position:absolute;
+right:120px;
+bottom:120px;
+
+display:flex;
+gap:80px;
+}
+
+.reviews-stats h3{
+font-size:55px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.reviews-stats p{
+opacity:.75;
+}
+
+@media(max-width:768px){
+
+.reviews-wrapper{
+min-height:900px;
+}
+
+.reviews-title{
+font-size:70px;
+}
+
+.review-card{
+position:relative;
+width:100%;
+top:auto;
+left:auto;
+right:auto;
+bottom:auto;
+margin-bottom:20px;
+}
+
+.reviews-stats{
+position:relative;
+right:auto;
+bottom:auto;
+justify-content:center;
+margin-top:30px;
+gap:40px;
+}
+
+.reviews-stats h3{
+font-size:40px;
+}
+
+}
 </style>
 </head>
 <body>
@@ -677,7 +815,63 @@ Loading cars...
 </div>
 
 </section>
+<section class="reviews-section">
 
+<div class="reviews-wrapper">
+
+<h2 class="reviews-title">
+What Players Say?
+</h2>
+
+<div class="review-card review-1">
+
+<div class="stars">
+⭐⭐⭐⭐⭐
+</div>
+
+<p>
+Trusted seller. Got my car fast and exactly as shown.
+</p>
+
+<span>
+— @player1
+</span>
+
+</div>
+
+<div class="review-card review-2">
+
+<div class="stars">
+⭐⭐⭐⭐⭐
+</div>
+
+<p>
+Smooth transaction and amazing spec quality.
+</p>
+
+<span>
+— @player2
+</span>
+
+</div>
+
+<div class="reviews-stats">
+
+<div>
+<h3>50+</h3>
+<p>Reviews</p>
+</div>
+
+<div>
+<h3>200+</h3>
+<p>Happy Buyers</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
 <div class="footer">
 86AutoPro © 2026
 </div>
