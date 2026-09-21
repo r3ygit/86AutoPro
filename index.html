@@ -767,7 +767,61 @@ font-weight:700;
 
 </div>
 </section>
+<section class="section">
 
+<div style="
+background:rgba(255,255,255,.06);
+backdrop-filter:blur(30px);
+border:1px solid rgba(255,255,255,.08);
+border-radius:35px;
+padding:40px;
+text-align:center;
+box-shadow:0 0 60px rgba(255,122,0,.12);
+">
+
+<h2 style="
+font-size:48px;
+font-weight:900;
+margin-bottom:15px;
+background:linear-gradient(
+135deg,
+#ffffff,
+#ffb347
+);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+">
+Built for CPM Players.
+Trusted by Car Enthusiasts.
+</h2>
+
+<p style="
+font-size:18px;
+line-height:1.8;
+max-width:850px;
+margin:auto;
+opacity:.9;
+">
+86AutoPro is a premium Car Parking Multiplayer marketplace built for players who value quality, trust, and professionalism. Every listing is carefully managed to provide a smooth and reliable buying experience.
+</p>
+
+<div style="
+display:flex;
+justify-content:center;
+gap:15px;
+flex-wrap:wrap;
+margin-top:25px;
+">
+
+<div class="sort-btn">🚗 Quality Cars</div>
+<div class="sort-btn">🔒 Trusted Deals</div>
+<div class="sort-btn">✅ Fast Response</div>
+
+</div>
+
+</div>
+
+</section>
 <section class="section">
 
 <h2 class="title">
@@ -811,7 +865,18 @@ backdrop-filter:blur(20px);
 <div class="loading">
 Loading cars...
 </div>
+<div style="text-align:center;margin-top:30px;">
 
+<button
+id="viewAllBtn"
+class="buy-btn"
+onclick="showAllCars()">
+
+ VIEW ALL CARS
+
+</button>
+
+</div>
 </div>
 
 </section>
@@ -872,6 +937,46 @@ Smooth transaction and amazing spec quality.
 </div>
 
 </section>
+<section class="section">
+
+<h2 class="title">
+⭐ Customer Reviews
+</h2>
+
+<div style="
+max-width:900px;
+margin:auto;
+display:grid;
+gap:20px;
+">
+
+<div class="car-card">
+⭐⭐⭐⭐⭐
+<br><br>
+"Very smooth deal. Got my car fast and everything was exactly as described."
+<br><br>
+— CPM Player
+</div>
+
+<div class="car-card">
+⭐⭐⭐⭐⭐
+<br><br>
+"Trusted seller. Easy process and premium cars."
+<br><br>
+— Happy Customer
+</div>
+
+<div class="car-card">
+⭐⭐⭐⭐⭐
+<br><br>
+"One of the best CPM marketplaces I've used."
+<br><br>
+— Verified Buyer
+</div>
+
+</div>
+
+</section>
 <div class="footer">
 86AutoPro © 2026
 </div>
@@ -924,9 +1029,22 @@ return;
 container.innerHTML = "";
 const search =
 document.getElementById("searchInput")?.value?.toLowerCase() || "";
-data
+const filteredCars = data
 .filter(car => {
 
+const matchesSearch =
+car.name.toLowerCase().includes(search);
+
+const matchesFilter =
+currentFilter === "all" ||
+car.status === currentFilter;
+
+return matchesSearch && matchesFilter;
+
+});
+(showAll
+? filteredCars
+: filteredCars.slice(0,4))
 const matchesSearch =
 car.name.toLowerCase().includes(search);
 
@@ -1002,6 +1120,19 @@ document.getElementById("searchInput")
 .addEventListener("input", () => {
 loadCars();
 });
+let showAll = false;
+
+window.showAllCars = () => {
+
+showAll = true;
+
+loadCars();
+
+document.getElementById(
+"viewAllBtn"
+).style.display = "none";
+
+};
 loadCars();
 
 </script>
