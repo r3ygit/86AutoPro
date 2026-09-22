@@ -1215,7 +1215,7 @@ return;
 
 container.innerHTML = "";
 
-data.forEach(car => {
+data.slice(0,4).forEach(car => {
 
 container.innerHTML += `
 <div class="car-card"
