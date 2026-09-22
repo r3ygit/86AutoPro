@@ -1189,6 +1189,8 @@ const supabase = createClient(
 );
 
 
+let showAll = false;
+
 async function loadCars(){
 
 const container =
@@ -1201,21 +1203,22 @@ await supabase
 .order("id",{ascending:false});
 
 if(error){
-container.innerHTML =
-"Error loading cars";
+container.innerHTML = "Error loading cars";
 console.log(error);
 return;
 }
 
 if(!data || data.length === 0){
-container.innerHTML =
-"No cars available";
+container.innerHTML = "No cars available";
 return;
 }
 
 container.innerHTML = "";
 
-data.slice(0,4).forEach(car => {
+const carsToShow =
+showAll ? data : data.slice(0,4);
+
+carsToShow.forEach(car => {
 
 container.innerHTML += `
 <div class="car-card"
@@ -1260,7 +1263,17 @@ cartBtn.innerHTML = `🛒 ${cart.length}`;
 window.addEventListener("focus", () => {
 updateCartCount();
 });
+window.showAllCars = () => {
 
+showAll = true;
+
+loadCars();
+
+document.getElementById(
+"viewAllBtn"
+).style.display = "none";
+
+};
 loadCars();
 updateCartCount();
 
