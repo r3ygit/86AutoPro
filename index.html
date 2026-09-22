@@ -1199,6 +1199,49 @@ await supabase
 .order("id",{ascending:false});
 
 if(error){
+container.innerHTML = "Error loading cars";
+console.log(error);
+return;
+}
+
+container.innerHTML = "";
+
+data.forEach(car => {
+
+container.innerHTML += `
+<div class="car-card"
+onclick="window.location.href='car.html?id=${car.id}'"
+style="cursor:pointer;">
+
+<img src="${car.image}"
+class="main-car-image">
+
+<h2 class="car-name">
+${car.name}
+</h2>
+
+<div class="price">
+₹${car.price}
+</div>
+
+</div>
+`;
+
+});
+
+}
+async function loadCars(){
+
+const container =
+document.getElementById("carsContainer");
+
+const { data, error } =
+await supabase
+.from("cars")
+.select("*")
+.order("id",{ascending:false});
+
+if(error){
 container.innerHTML =
 "Error loading cars";
 return;
