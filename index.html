@@ -1185,32 +1185,15 @@ JSON.parse(localStorage.getItem("cart")) || [];
 
 function updateCartCount(){
 
+let cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
 document.getElementById("cartCount").innerHTML =
 `🛒 ${cart.length}`;
 
 }
 
-window.addToCart = (id) => {
-
-cart.push(id);
-
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
-
-updateCartCount();
-
-alert("Added to Cart 🛒");
-
-};
-
-updateCartCount();
-
 window.addEventListener("focus", () => {
-
-cart =
-JSON.parse(localStorage.getItem("cart")) || [];
 
 updateCartCount();
 
@@ -1218,28 +1201,6 @@ updateCartCount();
 
 loadCars();
 updateCartCount();
-
-window.addToCart = (id) => {
-
-cart.push(id);
-
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
-
-updateCartCount();
-
-alert("Added to Cart 🛒");
-
-};
-
-function updateCartCount(){
-
-window.addEventListener("focus", updateCartCount);
-
-updateCartCount();
-loadCars();
 
 </script>
 
