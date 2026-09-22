@@ -76,7 +76,7 @@ await supabase
 .select("*")
 .eq("id",carId)
 .single();
-
+console.log(data);
 if(data){
 await supabase
 .from("cars")
