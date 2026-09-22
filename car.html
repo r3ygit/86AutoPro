@@ -251,21 +251,22 @@ margin-right:10px;
 ${data.status === 'sold'
 ? ''
 : `
-<a
-href="order.html?car=${encodeURIComponent(data.name)}&price=${data.price}&owner=${data.owner}"
+<button
+onclick="addToCart()"
 style="
 display:inline-block;
 padding:15px 25px;
 background:linear-gradient(135deg,#ff7a00,#ffb347);
 box-shadow:0 0 30px rgba(255,122,0,.45);
 color:white;
-text-decoration:none;
+border:none;
 border-radius:15px;
 font-weight:700;
-"
->
-🛒 BUY NOW
-</a>
+cursor:pointer;
+margin-right:10px;
+">
+🛒 ADD TO CART
+</button>
 `
 }
 <button
@@ -305,6 +306,35 @@ window.location.href
 
 alert("Car link copied!");
 }
+
+};
+window.addToCart = () => {
+
+let cart =
+
+JSON.parse(localStorage.getItem("cart")) || [];
+
+cart.push({
+
+id: data.id,
+
+name: data.name,
+
+price: data.price,
+
+image: data.image
+
+});
+
+localStorage.setItem(
+
+"cart",
+
+JSON.stringify(cart)
+
+);
+
+alert("Added To Cart 🛒");
 
 };
 </script>
