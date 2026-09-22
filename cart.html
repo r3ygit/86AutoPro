@@ -134,6 +134,28 @@ window.location.href =
 `order.html?cars=${encodeURIComponent(names)}&total=${total}`;
 
 }
+function goCheckout(){
+
+const cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
+const names =
+cart.map(car => car.name).join(", ");
+
+const prices =
+cart.map(car => car.price).join(", ");
+
+const total =
+cart.reduce(
+(sum, car) =>
+sum + Number(car.price),
+0
+);
+
+window.location.href =
+`order.html?cars=${encodeURIComponent(names)}&prices=${encodeURIComponent(prices)}&total=${total}`;
+
+}
 </script>
 
 </body>
