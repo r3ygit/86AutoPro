@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>86AutoPro Cart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+background:#050505;
+color:white;
+font-family:Inter,sans-serif;
+padding:20px;
+margin:0;
+}
+
+h1{
+text-align:center;
+margin-bottom:30px;
+}
+
+#cartItems{
+max-width:1000px;
+margin:auto;
+display:grid;
+gap:20px;
+}
+
+.cart-card{
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.08);
+border-radius:25px;
+padding:15px;
+}
+
+.cart-card img{
+width:100%;
+max-width:250px;
+border-radius:20px;
+display:block;
+margin:auto;
+}
+
+.price{
+font-size:24px;
+font-weight:800;
+color:#ff8a00;
+margin-top:10px;
+}
+
+.checkout-btn{
+display:block;
+max-width:350px;
+margin:30px auto;
+padding:18px;
+text-align:center;
+background:linear-gradient(135deg,#ff7a00,#ffb347);
+border-radius:18px;
+text-decoration:none;
+color:white;
+font-weight:800;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🛒 Your Cart</h1>
+
+<div id="cartItems"></div>
+
+<a href="order.html" class="checkout-btn">
+Proceed To Checkout
+</a>
+
+<script>
+
+const cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
+const container =
+document.getElementById("cartItems");
+
+if(cart.length === 0){
+
+container.innerHTML = `
+<h2 style="text-align:center;">
+Your cart is empty
+</h2>
+`;
+
+}else{
+
+cart.forEach(car=>{
+
+container.innerHTML += `
+<div class="cart-card">
+
+<img src="${car.image}">
+
+<h2>${car.name}</h2>
+
+<div class="price">
+₹${car.price}
+</div>
+
+</div>
+`;
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
