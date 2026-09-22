@@ -134,6 +134,8 @@ JSON.parse(localStorage.getItem("cart")) || [];
 
 const names =
 cart.map(car => car.name).join(", ");
+const owner =
+cart[0]?.owner || "r3y";
 
 const prices =
 cart.map(car => car.price).join(", ");
