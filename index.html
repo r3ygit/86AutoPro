@@ -1180,149 +1180,43 @@ Premium CPM Marketplace
 
 </div>
 
-<script type="module">
-
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-const supabase = createClient(
-"https://juwpebbsyeixiaxqhvok.supabase.co",
-"sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
-);
-let currentFilter = "all";
-async function loadCars(){
-
-const container =
-document.getElementById("carsContainer");
-
-const { data, error } =
-await supabase
-.from("cars")
-.select("*")
-.order("status",{ascending:true})
-.order("id",{ascending:false});
-
-
-if(error){
-
-container.innerHTML = `
-<div class="loading">
-Error loading cars
-</div>
-`;
-
-console.error(error);
-return;
-}
-
-if(!data || data.length === 0){
-
-container.innerHTML = `
-<div class="loading">
-No cars available
-</div>
-`;
-
-return;
-}
-
-container.innerHTML = "";
-const search =
-document.getElementById("searchInput")?.value?.toLowerCase() || "";
-const filteredCars = data.filter(car => {
-
-const matchesSearch =
-car.name.toLowerCase().includes(search);
-
-const matchesFilter =
-currentFilter === "all" ||
-car.status === currentFilter;
-
-return matchesSearch && matchesFilter;
-
-});
-
-(showAll
-? filteredCars
-: filteredCars.slice(0,4))
-.forEach(car=>{
-container.innerHTML += `
-<div
-class="car-card"
-onclick="window.location.href='car.html?id=${car.id}'"
-style="cursor:pointer;">
-
-<div class="status-badge ${car.status === 'sold' ? 'sold' : 'available'}">
-${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
-</div>
-
-<img
-src="${car.image}"
-alt="${car.name}"
-class="main-car-image">
-
-<h2 class="car-name">
-${car.name}
-</h2>
-<div class="price">
-₹${car.price}
-</div>
-
-
-
-</div>
-`;
-
-});
-
-}
-
-
-window.setFilter = (filter) => {
-
-currentFilter = filter;
-
-document
-.querySelectorAll(".sort-btn")
-.forEach(btn =>
-btn.classList.remove("active")
-);
-
-if(filter === "all"){
-document.querySelectorAll(".sort-btn")[0]
-.classList.add("active");
-}
-
-if(filter === "available"){
-document.querySelectorAll(".sort-btn")[1]
-.classList.add("active");
-}
-
-if(filter === "sold"){
-document.querySelectorAll(".sort-btn")[2]
-.classList.add("active");
-}
-
-loadCars();
-
-};
-document.getElementById("searchInput")
-.addEventListener("input", () => {
-loadCars();
-});
-let showAll = false;
-
-window.showAllCars = () => {
-
-showAll = true;
-
-loadCars();
-
-
-};
-
 let cart =
 JSON.parse(localStorage.getItem("cart")) || [];
 
+function updateCartCount(){
+
+document.getElementById("cartCount").innerHTML =
+`🛒 ${cart.length}`;
+
+}
+
+window.addToCart = (id) => {
+
+cart.push(id);
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+updateCartCount();
+
+alert("Added to Cart 🛒");
+
+};
+
+updateCartCount();
+
+window.addEventListener("focus", () => {
+
+cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
+updateCartCount();
+
+});
+
+loadCars();
 updateCartCount();
 
 window.addToCart = (id) => {
