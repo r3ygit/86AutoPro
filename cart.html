@@ -148,8 +148,7 @@ sum + Number(car.price),
 );
 
 window.location.href =
-`order.html?cars=${encodeURIComponent(names)}&prices=${encodeURIComponent(prices)}&total=${total}&owner=ferox`;
-
+`order.html?cars=${encodeURIComponent(names)}&prices=${encodeURIComponent(prices)}&total=${total}&owner=${owner}`;
 }
 function removeFromCart(id){
 
