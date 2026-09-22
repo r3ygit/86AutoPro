@@ -1225,6 +1225,10 @@ container.innerHTML += `
 onclick="window.location.href='car.html?id=${car.id}'"
 style="cursor:pointer;">
 
+<div class="status-badge ${car.status === 'sold' ? 'sold' : 'available'}">
+${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
+</div>
+
 <img
 src="${car.image}"
 class="main-car-image">
