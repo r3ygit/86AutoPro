@@ -1180,6 +1180,8 @@ Premium CPM Marketplace
 
 </div>
 
+<script type="module">
+
 let cart =
 JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -1188,22 +1190,23 @@ function updateCartCount(){
 let cart =
 JSON.parse(localStorage.getItem("cart")) || [];
 
-document.getElementById("cartCount").innerHTML =
-`🛒 ${cart.length}`;
+const cartBtn =
+document.getElementById("cartCount");
+
+if(cartBtn){
+cartBtn.innerHTML = `🛒 ${cart.length}`;
+}
 
 }
 
 window.addEventListener("focus", () => {
-
 updateCartCount();
-
 });
 
 loadCars();
 updateCartCount();
 
 </script>
-
 
 </div>
 </body>
