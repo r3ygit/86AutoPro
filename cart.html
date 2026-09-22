@@ -68,9 +68,11 @@ font-weight:800;
 
 <div id="cartItems"></div>
 
-<a href="order.html" class="checkout-btn">
+<button
+class="checkout-btn"
+onclick="goCheckout()">
 Proceed To Checkout
-</a>
+</button>
 
 <script>
 
@@ -109,7 +111,29 @@ container.innerHTML += `
 });
 
 }
+function goCheckout(){
 
+const cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
+if(cart.length === 0){
+alert("Cart is empty");
+return;
+}
+
+const names =
+cart.map(car => car.name).join(", ");
+
+const total =
+cart.reduce(
+(sum,car) => sum + Number(car.price),
+0
+);
+
+window.location.href =
+`order.html?cars=${encodeURIComponent(names)}&total=${total}`;
+
+}
 </script>
 
 </body>
