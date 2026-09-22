@@ -894,9 +894,12 @@ display:none !important;
 <body>
 
 <div class="navbar">
-86AutoPro
-</div>
+ 86AutoPro
 
+<span id="cartCount" style="float:right;">
+🛒 0
+</span>
+</div>
 <section class="hero">
 
 <img src="logo.PNG" alt="86AutoPro Logo" class="hero-logo">
@@ -1252,11 +1255,22 @@ class="main-car-image">
 <h2 class="car-name">
 ${car.name}
 </h2>
-
 <div class="price">
 ₹${car.price}
 </div>
 
+<button
+class="buy-btn"
+onclick="event.stopPropagation(); addToCart(${car.id})"
+style="width:100%;">
+🛒 ADD TO CART
+</button>
+
+<button
+class="buy-btn"
+onclick="event.stopPropagation(); addToCart(${car.id})">
+🛒 ADD TO CART
+</button>
 </div>
 `;
 
@@ -1305,6 +1319,42 @@ showAll = true;
 
 loadCars();
 
+document.getElementById(
+"viewAllBtn"
+).style.display = "none";
+
+};
+
+let cart =
+JSON.parse(localStorage.getItem("cart")) || [];
+
+updateCartCount();
+
+window.addToCart = (id) => {
+
+cart.push(id);
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+updateCartCount();
+
+alert("Added to Cart 🛒");
+
+};
+
+function updateCartCount(){
+
+document.getElementById(
+"cartCount"
+).innerText =
+`🛒 ${cart.length}`;
+
+}
+
+loadCars();
 document.getElementById(
 "viewAllBtn"
 ).style.display = "none";
