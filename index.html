@@ -729,9 +729,9 @@ font-size:34px;
 
 #carsContainer{
 
-grid-template-columns:1fr;
+grid-template-columns:repeat(2,1fr);
 
-gap:20px;
+gap:15px;
 
 }
 
@@ -838,8 +838,8 @@ line-height:1.7;
 }
 
 #carsContainer{
-grid-template-columns:1fr !important;
-gap:20px;
+grid-template-columns:repeat(2,1fr) !important;
+gap:15px;
 }
 
 .car-card{
@@ -847,11 +847,11 @@ padding:10px;
 }
 
 .car-name{
-font-size:22px;
+font-size:16px;
 }
 
 .price{
-font-size:24px;
+font-size:18px;
 }
 
 .buy-btn{
@@ -1187,6 +1187,50 @@ const supabase = createClient(
 "https://juwpebbsyeixiaxqhvok.supabase.co",
 "sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
 );
+async function loadCars(){
+
+const container =
+document.getElementById("carsContainer");
+
+const { data, error } =
+await supabase
+.from("cars")
+.select("*")
+.order("id",{ascending:false});
+
+if(error){
+container.innerHTML =
+"Error loading cars";
+return;
+}
+
+container.innerHTML = "";
+
+data.forEach(car => {
+
+container.innerHTML += `
+<div class="car-card"
+onclick="window.location.href='car.html?id=${car.id}'"
+style="cursor:pointer;">
+
+<img
+src="${car.image}"
+class="main-car-image">
+
+<h2 class="car-name">
+${car.name}
+</h2>
+
+<div class="price">
+₹${car.price}
+</div>
+
+</div>
+`;
+
+});
+
+}
 async function loadCars(){
 
 const container =
