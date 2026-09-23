@@ -1200,7 +1200,8 @@ const { data, error } =
 await supabase
 .from("cars")
 .select("*")
-.order("id",{ascending:false});
+.order("sold", { ascending: true })
+.order("id", { ascending: false });
 
 if(error){
 container.innerHTML = "Error loading cars";
