@@ -1200,7 +1200,7 @@ const { data, error } =
 await supabase
 .from("cars")
 .select("*")
-.order("sold", { ascending: true })
+.order("status", { ascending: true })
 .order("id", { ascending: false });
 
 if(error){
