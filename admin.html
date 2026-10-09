@@ -2,432 +2,214 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>86AutoPro Admin</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-background:#0b0b0b;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-padding:20px;
-}
-
-.card{
-width:100%;
-max-width:500px;
-background:#151515;
-padding:30px;
-border-radius:25px;
-border:1px solid #333;
-}
-
-h1{
-text-align:center;
-margin-bottom:25px;
-}
-
-input{
-width:100%;
-padding:15px;
-margin-bottom:15px;
-border:none;
-border-radius:12px;
-background:#222;
-color:white;
-}
-select{
-width:100%;
-padding:15px;
-margin-bottom:15px;
-border:none;
-border-radius:12px;
-background:#222;
-color:white;
-}
-button{
-width:100%;
-padding:15px;
-border:none;
-border-radius:12px;
-background:#8b5cf6;
-color:white;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-opacity:.9;
-}
-
-#status{
-margin-top:15px;
-text-align:center;
-}
-#carsList{
-margin-top:20px;
-}
-
-.car-item{
-background:#222;
-padding:15px;
-border-radius:12px;
-margin-bottom:10px;
-}
-
-.action-btn{
-width:auto;
-padding:10px 15px;
-margin-right:10px;
-margin-top:10px;
-}
-
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0b0b0b;color:white;display:flex;justify-content:center;min-height:100vh;padding:20px}
+.card{width:100%;max-width:500px;background:#151515;padding:25px;border-radius:20px;border:1px solid #333;height:max-content}
+h1{text-align:center;margin-bottom:25px}
+input:not([type=checkbox]),select{width:100%;padding:14px;margin-bottom:15px;border:0;border-radius:10px;background:#222;color:white}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:#ff8a00;color:white;font-weight:bold;cursor:pointer;margin:5px 0}
+.car-item{background:#222;padding:15px;border-radius:12px;margin-top:12px;overflow-wrap:anywhere}
+#message{margin-top:15px;overflow-wrap:anywhere}
+.assoc{display:flex;align-items:center;gap:10px;margin:10px 0 15px}
+.assoc input{width:20px;height:20px}
+.small{font-size:13px;color:#bbb;margin-bottom:10px}
 </style>
 </head>
 <body>
-
 <div class="card">
-
 <h1>86AutoPro Admin</h1>
 
-<input
-type="text"
-id="name"
-placeholder="Car Name">
-
-<input
-type="number"
-id="price"
-placeholder="Car Price">
+<input id="name" placeholder="Car Name">
+<input id="price" type="number" placeholder="Car Price">
 
 <select id="status">
 <option value="available">Available</option>
 <option value="sold">Sold Out</option>
 </select>
 
-<input
-type="file"
-id="image"
-accept="image/*">
-  <input
-type="file"
-id="image2"
-accept="image/*">
+<label class="small">Main car image (required)</label>
+<input id="image" type="file" accept="image/*">
+<label class="small">Second image (optional)</label>
+<input id="image2" type="file" accept="image/*">
+<label class="small">Third image (optional)</label>
+<input id="image3" type="file" accept="image/*">
 
-<input
-type="file"
-id="image3"
-accept="image/*">
 <select id="owner">
-
-<option value="r3y">
-R3Y
-</option>
-
-<option value="ferox">
-FEROX
-</option>
-
+<option value="r3y">R3Y</option>
+<option value="ferox">FEROX</option>
 </select>
-<input
-type="text"
-id="instagram"
-placeholder="Instagram Link">
 
-<input
-type="text"
-id="description"
-placeholder="Car Description">
-<label style="display:flex;align-items:center;gap:10px;margin:15px 0;color:white;">
-  <input
-    type="checkbox"
-    id="isAssociated"
-    style="width:20px;height:20px;margin:0;">
-  Associated Company Car
+<input id="instagram" placeholder="Instagram Link">
+<input id="description" placeholder="Car Description">
+
+<label class="assoc">
+<input type="checkbox" id="isAssociated">
+Associated Company Car
 </label>
 
-<input
-  type="text"
-  document.getElementById("isAssociated").checked = false;
-document.getElementById("associatedCompany").value = "";
-<button onclick="uploadCar()">
-  Add Car
-</button>
-<h2 style="margin-top:25px;">Cars</h2>
+<input id="associatedCompany" placeholder="Company Name (e.g. 86AutoPro)" disabled>
 
+<button id="addButton" type="button">Add Car</button>
+
+<h2 style="margin-top:25px">Cars</h2>
 <div id="carsList"></div>
-<div id="message"></div>
-
+<div id="message" role="status"></div>
 </div>
 
 <script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-import { createClient }
-from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+const SUPABASE_URL = "https://juwpebbsyeixiaxqhvok.supabase.co";
+const SUPABASE_KEY = "sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv";
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const SUPABASE_URL =
-"https://juwpebbsyeixiaxqhvok.supabase.co";
+const el = id => document.getElementById(id);
+const message = text => { el("message").textContent = text; };
 
-const SUPABASE_KEY =
-"sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv";
-
-const supabase =
-createClient(
-SUPABASE_URL,
-SUPABASE_KEY
-);
-async function loadCars(){
-
-const { data, error } =
-await supabase
-.from("cars")
-.select("*")
-.order("id",{ascending:false});
-
-if(error) return;
-
-const carsList =
-document.getElementById("carsList");
-
-carsList.innerHTML = "";
-
-data.forEach(car=>{
-
-carsList.innerHTML += `
-<div class="car-item">
-
-<input
-id="name-${car.id}"
-value="${car.name}"
-style="margin-bottom:10px;">
-
-<input
-id="price-${car.id}"
-value="${car.price}"
-style="margin-bottom:10px;">
-
-<p>Status: ${car.status}</p>
-
-<button
-class="action-btn"
-onclick="saveCar(${car.id})">
-Save
-</button>
-
-<button
-class="action-btn"
-onclick="toggleStatus(${car.id},'${car.status}')">
-${car.status === 'sold'
-? 'Mark Available'
-: 'Mark Sold'}
-</button>
-
-<button
-class="action-btn"
-onclick="deleteCar(${car.id})">
-Delete
-</button>
-
-</div>
-`;
-
+el("isAssociated").addEventListener("change", () => {
+  el("associatedCompany").disabled = !el("isAssociated").checked;
+  if (!el("isAssociated").checked) el("associatedCompany").value = "";
 });
 
+async function loadCars() {
+  const { data, error } = await supabase
+    .from("cars").select("*").order("id", { ascending: false });
+
+  if (error) {
+    message("Could not load cars: " + error.message);
+    return;
+  }
+
+  el("carsList").innerHTML = "";
+
+  for (const car of data || []) {
+    const item = document.createElement("div");
+    item.className = "car-item";
+
+    const title = document.createElement("strong");
+    title.textContent = car.name || "Unnamed car";
+    item.appendChild(title);
+
+    const detail = document.createElement("p");
+    detail.textContent = `₹${car.price} · ${car.status}`;
+    item.appendChild(detail);
+
+    if (car.is_associated && car.associated_company) {
+      const company = document.createElement("p");
+      company.textContent = "🏅 " + car.associated_company;
+      item.appendChild(company);
+    }
+
+    const statusButton = document.createElement("button");
+    statusButton.textContent = car.status === "sold" ? "Mark Available" : "Mark Sold";
+    statusButton.onclick = async () => {
+      const { error } = await supabase.from("cars")
+        .update({ status: car.status === "sold" ? "available" : "sold" })
+        .eq("id", car.id);
+      if (error) message("Status update failed: " + error.message);
+      else { message("Status updated."); await loadCars(); }
+    };
+    item.appendChild(statusButton);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete Car";
+    deleteButton.onclick = async () => {
+      if (!confirm("Delete this car?")) return;
+      const { error } = await supabase.from("cars").delete().eq("id", car.id);
+      if (error) message("Delete failed: " + error.message);
+      else { message("Car deleted."); await loadCars(); }
+    };
+    item.appendChild(deleteButton);
+
+    el("carsList").appendChild(item);
+  }
 }
 
-window.deleteCar = async (id)=>{
+async function uploadCar() {
+  const name = el("name").value.trim();
+  const price = el("price").value;
+  const file = el("image").files[0];
+  const file2 = el("image2").files[0];
+  const file3 = el("image3").files[0];
+  const associated = el("isAssociated").checked;
+  const company = el("associatedCompany").value.trim();
 
-const ok =
-confirm("Delete this car?");
+  if (!name || !price || !file) {
+    message("Please enter a car name, price, and main image.");
+    return;
+  }
 
-if(!ok) return;
+  if (associated && !company) {
+    message("Enter the associated company name.");
+    return;
+  }
 
-await supabase
-.from("cars")
-.delete()
-.eq("id",id);
+  el("addButton").disabled = true;
+  el("addButton").textContent = "Uploading...";
+  message("Uploading images...");
 
-loadCars();
-};
-window.deleteCar = async (id)=>{
+  try {
+    const uploadImage = async file => {
+      if (!file) return null;
+      const path = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" +
+        file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
 
-const ok =
-confirm("Delete this car?");
+      const { error } = await supabase.storage.from("cars").upload(path, file);
+      if (error) throw error;
 
-if(!ok) return;
+      return `${SUPABASE_URL}/storage/v1/object/public/cars/${path}`;
+    };
 
-await supabase
-.from("cars")
-.delete()
-.eq("id",id);
+    const image = await uploadImage(file);
+    const image2 = await uploadImage(file2);
+    const image3 = await uploadImage(file3);
 
-loadCars();
-};
+    message("Saving car details...");
 
-window.saveCar = async (id)=>{
+    const { error } = await supabase.from("cars").insert([{
+      name,
+      price: Number(price),
+      status: el("status").value,
+      owner: el("owner").value,
+      instagram: el("instagram").value.trim(),
+      description: el("description").value.trim(),
+      is_associated: associated,
+      associated_company: associated ? company : null,
+      image,
+      image2,
+      image3
+    }]);
 
-const newName =
-document.getElementById(`name-${id}`).value;
+    if (error) throw error;
 
-const newPrice =
-document.getElementById(`price-${id}`).value;
+    message("Car added successfully! ✅");
 
-await supabase
-.from("cars")
-.update({
-name:newName,
-price:newPrice
-})
-.eq("id",id);
+    el("name").value = "";
+    el("price").value = "";
+    el("image").value = "";
+    el("image2").value = "";
+    el("image3").value = "";
+    el("owner").value = "r3y";
+    el("instagram").value = "";
+    el("description").value = "";
+    el("isAssociated").checked = false;
+    el("associatedCompany").value = "";
+    el("associatedCompany").disabled = true;
 
-loadCars();
-
-};
-
-window.toggleStatus = async (id,currentStatus)=>{
-
-const newStatus =
-currentStatus === "sold"
-? "available"
-: "sold";
-
-await supabase
-.from("cars")
-.update({
-status:newStatus
-})
-.eq("id",id);
-
-loadCars();
-
-};
-window.uploadCar = async () => {
-
-const name =
-document.getElementById("name").value;
-
-const price =
-document.getElementById("price").value;
-
-const file =
-document.getElementById("image").files[0];
-
-const file2 =
-document.getElementById("image2").files[0];
-
-const file3 =
-document.getElementById("image3").files[0];
-
-if(!name || !price || !file){
-alert("Name, Price and Main Image required");
-return;
-}
-document.getElementById("message").innerText =
-"Uploading...";
-
-const fileName =
-Date.now() + "-" + file.name;
-
-const { error: uploadError } =
-await supabase.storage
-.from("cars")
-.upload(fileName,file);
-
-if(uploadError){
-alert(uploadError.message);
-return;
+    await loadCars();
+  } catch (error) {
+    message("Upload failed: " + (error.message || String(error)));
+  } finally {
+    el("addButton").disabled = false;
+    el("addButton").textContent = "Add Car";
+  }
 }
 
-const imageUrl =
-`${SUPABASE_URL}/storage/v1/object/public/cars/${fileName}`;
-  let imageUrl2 = null;
-let imageUrl3 = null;
-
-if(file2){
-
-const fileName2 =
-Date.now() + "-2-" + file2.name;
-
-await supabase.storage
-.from("cars")
-.upload(fileName2,file2);
-
-imageUrl2 =
-`${SUPABASE_URL}/storage/v1/object/public/cars/${fileName2}`;
-
-}
-
-if(file3){
-
-const fileName3 =
-Date.now() + "-3-" + file3.name;
-
-await supabase.storage
-.from("cars")
-.upload(fileName3,file3);
-
-imageUrl3 =
-`${SUPABASE_URL}/storage/v1/object/public/cars/${fileName3}`;
-
-}
-
-const { error } =
-await supabase
-.from("cars")
-.insert([
-{
-name:name,
-price:price,
-status:
-document.getElementById("status").value,
-
-owner:
-document.getElementById("owner").value,
-instagram:
-document.getElementById("instagram").value,
-
-description:
-document.getElementById("description").value,
-
-is_associated:
-document.getElementById("isAssociated").checked,
-
-associated_company:
-document.getElementById("isAssociated").checked
-  ? document.getElementById("associatedCompany").value.trim()
-  : null,
-image:imageUrl,
-image2:imageUrl2,
-image3:imageUrl3
-}
-]);
-
-if(error){
-alert(error.message);
-return;
-}
-
-document.getElementById("message").innerText =
-"Car Added Successfully ✅";
-document.getElementById("name").value="";
-document.getElementById("price").value="";
-document.getElementById("image").value="";
-  document.getElementById("image2").value="";
-document.getElementById("owner").value="r3y";
-document.getElementById("isAssociated").checked = false;
-document.getElementById("associatedCompany").value = "";
-loadCars();
-};
+el("addButton").addEventListener("click", uploadCar);
 loadCars();
 </script>
 </body>
