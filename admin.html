@@ -158,8 +158,8 @@ placeholder="Car Description">
 
 <input
   type="text"
-  id="associatedCompany"
-  placeholder="Company Name (e.g. 86AutoPro)">
+  document.getElementById("isAssociated").checked = false;
+document.getElementById("associatedCompany").value = "";
 <button onclick="uploadCar()">
 Add Car
 </button>
@@ -398,9 +398,14 @@ document.getElementById("instagram").value,
 
 description:
 document.getElementById("description").value,
-owner:
-document.getElementById("owner").value,
 
+is_associated:
+document.getElementById("isAssociated").checked,
+
+associated_company:
+document.getElementById("isAssociated").checked
+  ? document.getElementById("associatedCompany").value.trim()
+  : null,
 image:imageUrl,
 image2:imageUrl2,
 image3:imageUrl3
@@ -419,6 +424,8 @@ document.getElementById("price").value="";
 document.getElementById("image").value="";
   document.getElementById("image2").value="";
 document.getElementById("owner").value="r3y";
+document.getElementById("isAssociated").checked = false;
+document.getElementById("associatedCompany").value = "";
 loadCars();
 };
 loadCars();
