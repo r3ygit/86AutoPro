@@ -889,6 +889,24 @@ display:none !important;
 }
 
 }
+.company-badge {
+  position: absolute;
+  top: 58px;
+  right: 20px;
+  z-index: 10;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 138, 0, 0.95);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 0 18px rgba(255, 138, 0, 0.3);
+}
+
+.company-badge.badge-86 {
+  background: linear-gradient(135deg, #ffb347, #ff7a00);
+  color: #151515;
+}
 </style>
 </head>
 <body>
@@ -1220,15 +1238,27 @@ const carsToShow =
 showAll ? data : data.slice(0,4);
 
 carsToShow.forEach(car => {
-
+const companyBadge = car.is_associated && car.associated_company
+  ? `<div class="company-badge ${
+      car.associated_company.trim().toLowerCase() === "86autopro"
+        ? "badge-86"
+        : ""
+    }">${
+      car.associated_company.trim().toLowerCase() === "86autopro"
+        ? "86 Spec 🏅"
+        : car.associated_company
+    }</div>`
+  : "";
 container.innerHTML += `
 <div class="car-card"
 onclick="window.location.href='car.html?id=${car.id}'"
 style="cursor:pointer;">
 
 <div class="status-badge ${car.status === 'sold' ? 'sold' : 'available'}">
-${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
+  ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
 </div>
+
+${companyBadge}
 
 <img
 src="${car.image}"
