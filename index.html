@@ -933,12 +933,14 @@ display:none !important;
   );
 }
 
+
 .logo-track {
   display: flex;
   width: max-content;
-  gap: 24px;
-  animation: garageFloat 32s linear infinite;
+  gap: 80px;
+  animation: garageFloat 60s linear infinite;
 }
+
 
 .logo-marquee:hover .logo-track {
   animation-play-state: paused;
@@ -1223,51 +1225,19 @@ VIEW ALL CARS
   </p>
 
   <div class="logo-marquee">
-    <div class="logo-track">
 
-      <div class="garage-logo">
-        <img src="logo.PNG" alt="86AutoPro">
-        <span>86AutoPro</span>
-      </div>
-
-      <div class="garage-logo">
-        <img src="logo.PNG" alt="86AutoPro">
-        <span>86AutoPro</span>
-      </div>
-
-      <div class="garage-logo">
-        <img src="logo.PNG" alt="86AutoPro">
-        <span>86AutoPro</span>
-      </div>
-
-      <div class="garage-logo">
-        <img src="logo.PNG" alt="86AutoPro">
-        <span>86AutoPro</span>
-      </div>
-
-      <!-- Duplicate logos for seamless looping -->
-      <div class="garage-logo" aria-hidden="true">
-        <img src="logo.PNG" alt="">
-        <span>86AutoPro</span>
-      </div>
-
-      <div class="garage-logo" aria-hidden="true">
-        <img src="logo.PNG" alt="">
-        <span>86AutoPro</span>
-      </div>
-
-      <div class="garage-logo" aria-hidden="true">
-        <img src="logo.PNG" alt="">
-        <span>86AutoPro</span>
-      </div>
-
-      <div class="garage-logo" aria-hidden="true">
-        <img src="logo.PNG" alt="">
-        <span>86AutoPro</span>
-      </div>
-
-    </div>
+<div class="logo-track">
+  <div class="garage-logo">
+    <img src="logo.PNG" alt="86AutoPro">
+    <span>86AutoPro</span>
   </div>
+
+  <div class="garage-logo" aria-hidden="true">
+    <img src="logo.PNG" alt="">
+    <span>86AutoPro</span>
+  </div>
+</div>
+
 
   <p class="associated-note">More garage collaborations coming soon.</p>
 </section>
