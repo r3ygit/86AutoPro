@@ -998,6 +998,45 @@ display:none !important;
   }
 }
 
+/* PREMIUM ASSOCIATED COMPANIES TITLE */
+.associated-section .title {
+  font-family: "Arial Black", "Impact", sans-serif;
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 900;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: transparent;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #ffe0b2 25%,
+    #ff941f 55%,
+    #a84400 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-stroke: 0.6px rgba(255, 165, 60, 0.6);
+  filter: drop-shadow(0 0 10px rgba(255, 125, 0, 0.35));
+  margin-bottom: 30px;
+  animation: titleGlow 4s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 7px rgba(255, 125, 0, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(255, 125, 0, 0.65));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .associated-section .title {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 <body>
