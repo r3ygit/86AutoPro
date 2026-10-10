@@ -907,6 +907,95 @@ display:none !important;
   background: linear-gradient(135deg, #ffb347, #ff7a00);
   color: #151515;
 }
+
+.associated-section {
+  text-align: center;
+  overflow: hidden;
+}
+
+.associated-subtitle {
+  color: #bbb;
+  margin-top: -18px;
+  margin-bottom: 35px;
+  line-height: 1.7;
+}
+
+.logo-marquee {
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 10%,
+    black 90%,
+    transparent
+  );
+}
+
+.logo-track {
+  display: flex;
+  width: max-content;
+  gap: 24px;
+  animation: garageFloat 32s linear infinite;
+}
+
+.logo-marquee:hover .logo-track {
+  animation-play-state: paused;
+}
+
+.garage-logo {
+  width: 170px;
+  min-height: 180px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid rgba(255, 138, 0, .2);
+  border-radius: 25px;
+  background: rgba(255, 255, 255, .05);
+  box-shadow: 0 0 30px rgba(255, 122, 0, .08);
+  animation: logoBob 4s ease-in-out infinite;
+}
+
+.garage-logo img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  border-radius: 18px;
+}
+
+.garage-logo span {
+  font-weight: 800;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.associated-note {
+  color: #999;
+  font-size: 13px;
+  margin-top: 15px;
+}
+
+@keyframes garageFloat {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes logoBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-track, .garage-logo {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1125,7 +1214,66 @@ VIEW ALL CARS
 </div>
 
 </section>
+
+<!-- ASSOCIATED COMPANIES -->
+<section class="section associated-section">
+  <h2 class="title">ASSOCIATED COMPANIES</h2>
+  <p class="associated-subtitle">
+    CPM garages moving together with 86AutoPro.
+  </p>
+
+  <div class="logo-marquee">
+    <div class="logo-track">
+
+      <div class="garage-logo">
+        <img src="logo.PNG" alt="86AutoPro">
+        <span>86AutoPro</span>
+      </div>
+
+      <div class="garage-logo">
+        <img src="logo.PNG" alt="86AutoPro">
+        <span>86AutoPro</span>
+      </div>
+
+      <div class="garage-logo">
+        <img src="logo.PNG" alt="86AutoPro">
+        <span>86AutoPro</span>
+      </div>
+
+      <div class="garage-logo">
+        <img src="logo.PNG" alt="86AutoPro">
+        <span>86AutoPro</span>
+      </div>
+
+      <!-- Duplicate logos for seamless looping -->
+      <div class="garage-logo" aria-hidden="true">
+        <img src="logo.PNG" alt="">
+        <span>86AutoPro</span>
+      </div>
+
+      <div class="garage-logo" aria-hidden="true">
+        <img src="logo.PNG" alt="">
+        <span>86AutoPro</span>
+      </div>
+
+      <div class="garage-logo" aria-hidden="true">
+        <img src="logo.PNG" alt="">
+        <span>86AutoPro</span>
+      </div>
+
+      <div class="garage-logo" aria-hidden="true">
+        <img src="logo.PNG" alt="">
+        <span>86AutoPro</span>
+      </div>
+
+    </div>
+  </div>
+
+  <p class="associated-note">More garage collaborations coming soon.</p>
+</section>
+
 <section class="reviews-section">
+
 
 <div class="reviews-wrapper">
 
