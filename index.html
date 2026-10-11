@@ -1042,6 +1042,167 @@ display:none !important;
   }
 }
 
+.logo-marquee {
+  width: 100%;
+  overflow: hidden;
+}
+
+.logo-track {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  animation: garageFloat 30s linear infinite;
+}
+
+.garage-logo {
+  flex: 0 0 170px;
+}
+
+@keyframes garageFloat {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* 86WEB ORANGE + BLACK LOADER */
+#loadingScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(
+      ellipse at 50% 40%,
+      #482006 0%,
+      #160b05 38%,
+      #030303 75%
+    );
+  backdrop-filter: blur(25px);
+  opacity: 1;
+  transition: opacity .5s ease;
+}
+
+#loadingScreen.active {
+  display: flex;
+}
+
+#loadingScreen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader-content {
+  width: min(86%, 380px);
+  text-align: center;
+  animation: loaderEnter .7s ease both;
+}
+
+.logo86 {
+  display: block;
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  margin: 0 auto 16px;
+  filter: drop-shadow(0 0 18px #ff790077);
+  animation: logoGlow 2s ease-in-out infinite alternate;
+}
+
+.loader-content h2 {
+  margin: 12px 0 5px;
+  color: #fff;
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.loader-tag {
+  color: #ff7900;
+  font-size: 10px;
+  letter-spacing: 4px;
+}
+
+.loader-track {
+  height: 4px;
+  margin: 35px 0 18px;
+  background: #ffffff16;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.loader-progress {
+  width: 35%;
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(
+    90deg, #ff5100, #ff7900, #ffc078
+  );
+  box-shadow: 0 0 16px #ff7900;
+  animation: loaderProgress 2s ease-in-out infinite;
+}
+
+.loader-status {
+  color: #ff7900;
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+
+.loader-message {
+  margin-top: 22px;
+  color: #c7beb7;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.loader-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 25px;
+}
+
+.loader-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff7900;
+  animation: loaderDot .9s infinite alternate;
+}
+
+.loader-dots span:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.loader-dots span:nth-child(3) {
+  animation-delay: .4s;
+}
+
+@keyframes loaderProgress {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(310%); }
+}
+
+@keyframes loaderDot {
+  from { opacity: .25; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(-5px); }
+}
+
+@keyframes loaderEnter {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes logoGlow {
+  from {
+    filter: drop-shadow(0 0 8px #ff790044);
+  }
+  to {
+    filter: drop-shadow(0 0 24px #ff790099);
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1261,6 +1422,7 @@ VIEW ALL CARS
 
 </section>
 
+
 <!-- ASSOCIATED COMPANIES -->
 <section class="section associated-section">
   <h2 class="title">ASSOCIATED COMPANIES</h2>
@@ -1269,23 +1431,30 @@ VIEW ALL CARS
   </p>
 
   <div class="logo-marquee">
+    <div class="logo-track">
+      <div class="garage-logo">
+        <img src="logo.PNG" alt="86AutoPro">
+        <span>86AutoPro</span>
+      </div>
+      <div class="garage-logo">
+        <img src="valv.PNG.jpg" alt="VALV Automotive">
+        <span>VALV Automotive</span>
+      </div>
 
-
-<div class="garage-logo">
-  <img src="valv.PNG.jpg" alt="VALV Automotive">
-  <span>VALV Automotive</span>
-</div>
-
-
-  <div class="garage-logo" aria-hidden="true">
-    <img src="logo.PNG" alt="86AutoPro">
-    <span>86AutoPro</span>
+      <div class="garage-logo" aria-hidden="true">
+        <img src="logo.PNG" alt="">
+        <span>86AutoPro</span>
+      </div>
+      <div class="garage-logo" aria-hidden="true">
+        <img src="valv.PNG.jpg" alt="">
+        <span>VALV Automotive</span>
+      </div>
+    </div>
   </div>
-</div>
-
 
   <p class="associated-note">More garage collaborations coming soon.</p>
 </section>
+
 
 <section class="reviews-section">
 
@@ -1478,5 +1647,91 @@ updateCartCount();
 </script>
 
 </div>
+
+<!-- 86WEB PREMIUM LOADING SCREEN -->
+<div id="loadingScreen">
+  <div class="loader-content">
+
+<img src="logo.PNG" class="logo86" alt="86Web Logo">
+
+    <h2>86AutoPro</h2>
+    <p class="loader-tag">PREMIUM CPM MARKETPLACE</p>
+
+    <div class="loader-track">
+      <div class="loader-progress"></div>
+    </div>
+
+    <p class="loader-status">INITIALIZING 86WEB...</p>
+
+    <p class="loader-message">
+      Sorry for the wait! High traffic —
+      many CPM players are using 86Web.
+    </p>
+
+    <div class="loader-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const screen = document.getElementById("loadingScreen");
+  if (!screen) return;
+
+  let busy = false;
+
+  function showLoading(destination) {
+    if (busy) return;
+    busy = true;
+
+    screen.classList.remove("fade-out");
+    screen.classList.add("active");
+    screen.setAttribute("aria-hidden", "false");
+
+    // Demo loading effect
+    setTimeout(() => {
+      screen.classList.add("fade-out");
+
+      setTimeout(() => {
+        screen.classList.remove("active", "fade-out");
+        screen.setAttribute("aria-hidden", "true");
+        busy = false;
+
+        if (destination) {
+          window.location.href = destination;
+        }
+      }, 500);
+    }, 2200);
+  }
+
+  // Explore buttons
+  document.querySelectorAll(
+    '#explore, #exploreBtn, .explore-btn, [data-explore]'
+  ).forEach(button => {
+    button.addEventListener("click", event => {
+      const target = document.querySelector("#cars");
+      if (!target) return;
+
+      event.preventDefault();
+      showLoading();
+
+      setTimeout(() => {
+        target.scrollIntoView({ behavior: "smooth" });
+      }, 2700);
+    });
+  });
+
+  // Car cards: show loading when clicked.
+  // BUY NOW links and buttons remain functional.
+  document.querySelectorAll(".car-card").forEach(card => {
+    card.addEventListener("click", event => {
+      if (event.target.closest("a, button, input")) return;
+      showLoading();
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
