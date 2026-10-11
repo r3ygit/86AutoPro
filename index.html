@@ -1232,6 +1232,7 @@ display:none !important;
   </div>
 </div>
 
+
 <script>
 (() => {
   const screen = document.getElementById("loadingScreen");
@@ -1239,7 +1240,7 @@ display:none !important;
 
   let busy = false;
 
-  function showLoading(destination) {
+  function showLoading(action) {
     if (busy) return;
     busy = true;
 
@@ -1247,7 +1248,7 @@ display:none !important;
     screen.classList.add("active");
     screen.setAttribute("aria-hidden", "false");
 
-    // Demo loading effect
+    // Keep the premium loading screen visible
     setTimeout(() => {
       screen.classList.add("fade-out");
 
@@ -1256,40 +1257,48 @@ display:none !important;
         screen.setAttribute("aria-hidden", "true");
         busy = false;
 
-        if (destination) {
-          window.location.href = destination;
+        if (typeof action === "function") {
+          action();
         }
       }, 500);
     }, 2200);
   }
 
-  // Explore buttons
-  document.querySelectorAll(
-    '#explore, #exploreBtn, .explore-btn, [data-explore]'
-  ).forEach(button => {
-    button.addEventListener("click", event => {
-      const target = document.querySelector("#cars");
-      if (!target) return;
+  // Works with the Explore button and dynamically loaded cars
+  document.addEventListener("click", function(event) {
+    const explore = event.target.closest(
+      'a[href="#carsContainer"], #explore, #exploreBtn, .explore-btn, [data-explore]'
+    );
+
+    if (explore) {
+      event.preventDefault();
+
+      showLoading(() => {
+        document.getElementById("carsContainer")
+          ?.scrollIntoView({ behavior: "smooth" });
+      });
+
+      return;
+    }
+
+    const card = event.target.closest(
+      ".car-card[data-car-url]"
+    );
+
+    if (card) {
+      if (event.target.closest("a, button, input")) return;
 
       event.preventDefault();
-      showLoading();
 
-      setTimeout(() => {
-        target.scrollIntoView({ behavior: "smooth" });
-      }, 2700);
-    });
-  });
+      showLoading(() => {
+        window.location.href = card.dataset.carUrl;
+      });
+    }
+  }, true);
 
-  // Car cards: show loading when clicked.
-  // BUY NOW links and buttons remain functional.
-  document.querySelectorAll(".car-card").forEach(card => {
-    card.addEventListener("click", event => {
-      if (event.target.closest("a, button, input")) return;
-      showLoading();
-    });
-  });
 })();
 </script>
+
 
 <div class="navbar">
  86AutoPro
@@ -1666,9 +1675,11 @@ const companyBadge = car.is_associated && car.associated_company
     }</div>`
   : "";
 container.innerHTML += `
+
 <div class="car-card"
-onclick="window.location.href='car.html?id=${car.id}'"
+data-car-url="car.html?id=${car.id}"
 style="cursor:pointer;">
+
 
 <div class="status-badge ${car.status === 'sold' ? 'sold' : 'available'}">
   ${car.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
