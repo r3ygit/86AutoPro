@@ -40,7 +40,7 @@
   "screenshots": [
     {
       "src": "screenshots/showcase-mobile.png",
-      "sizes": "1080x1920",
+      "sizes": "398x867",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "86AutoPro Mobile Marketplace"
