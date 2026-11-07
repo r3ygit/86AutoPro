@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>86AutoPro</title>
+<title>86 x AZ</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#ff7a00">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1203,6 +1203,42 @@ display:none !important;
   }
 }
 
+
+/* 86AutoPro × AZ VINYLZ hero collaboration logos */
+.hero-brand-lockup{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:22px;
+  margin:0 auto 28px;
+  width:100%;
+}
+.hero-brand-logo{
+  width:120px;
+  height:120px;
+  object-fit:contain;
+  border-radius:26px;
+  display:block;
+  box-shadow:0 0 45px rgba(255,122,0,.32);
+  animation:floatLogo 4s ease-in-out infinite;
+}
+.hero-brand-logo.logo-az{
+  animation-delay:.35s;
+  background:#000;
+}
+.hero-brand-x{
+  color:#ff8a00;
+  font-size:46px;
+  line-height:1;
+  font-weight:800;
+  text-shadow:0 0 22px rgba(255,122,0,.65);
+}
+@media(max-width:480px){
+  .hero-brand-lockup{gap:14px;margin-bottom:24px}
+  .hero-brand-logo{width:92px;height:92px;border-radius:21px}
+  .hero-brand-x{font-size:36px}
+}
+
 </style>
 </head>
 <body>
@@ -1212,7 +1248,7 @@ display:none !important;
 
 <img src="logo.PNG" class="logo86" alt="86Web Logo">
 
-    <h2>86AutoPro</h2>
+    <h2>86 X AZ</h2>
     <p class="loader-tag">PREMIUM CPM MARKETPLACE</p>
 
     <div class="loader-track">
@@ -1301,7 +1337,7 @@ display:none !important;
 
 
 <div class="navbar">
- 86AutoPro
+ 86 x AZ
 
 <a
 href="cart.html"
@@ -1317,7 +1353,11 @@ font-weight:700;
 </div>
 <section class="hero">
 
-<img src="logo.PNG" alt="86AutoPro Logo" class="hero-logo">
+<div class="hero-brand-lockup" aria-label="86AutoPro and AZ Vinylz collaboration">
+  <img src="logo.PNG" alt="86AutoPro Logo" class="hero-brand-logo logo-86">
+  <span class="hero-brand-x" aria-hidden="true">×</span>
+  <img src="az-vinylz.jpg" alt="AZ Vinylz Logo" class="hero-brand-logo logo-az">
+</div>
 <div style="
 display:inline-block;
 padding:8px 18px;
