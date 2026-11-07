@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,26 +13,19 @@ font-family:Inter,sans-serif;
 padding:20px;
 margin:0;
 }
-
-h1{
-text-align:center;
-margin-bottom:30px;
-}
-
+h1{text-align:center;margin-bottom:30px}
 #cartItems{
 max-width:1000px;
 margin:auto;
 display:grid;
 gap:20px;
 }
-
 .cart-card{
 background:rgba(255,255,255,.06);
 border:1px solid rgba(255,255,255,.08);
 border-radius:25px;
 padding:15px;
 }
-
 .cart-card img{
 width:100%;
 max-width:250px;
@@ -39,131 +33,169 @@ border-radius:20px;
 display:block;
 margin:auto;
 }
-
 .price{
 font-size:24px;
 font-weight:800;
 color:#ff8a00;
 margin-top:10px;
 }
-
 .checkout-btn{
 display:block;
+width:100%;
 max-width:350px;
 margin:30px auto;
 padding:18px;
 text-align:center;
 background:linear-gradient(135deg,#ff7a00,#ffb347);
+border:0;
 border-radius:18px;
-text-decoration:none;
 color:white;
 font-weight:800;
+cursor:pointer;
+}
+.checkout-btn:disabled{
+opacity:.4;
+cursor:not-allowed;
+}
+.total{
+max-width:1000px;
+margin:25px auto;
+text-align:center;
+font-size:25px;
+font-weight:800;
+color:#ff8a00;
 }
 </style>
-
 </head>
+
 <body>
 
 <h1>🛒 Your Cart</h1>
 
 <div id="cartItems"></div>
+<div class="total" id="cartTotal"></div>
 
-<button
-class="checkout-btn"
-onclick="goCheckout()">
+<button class="checkout-btn" id="checkoutButton" onclick="goCheckout()">
 Proceed To Checkout
 </button>
 
 <script>
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-const cart =
-JSON.parse(localStorage.getItem("cart")) || [];
+const container = document.getElementById("cartItems");
+const totalElement = document.getElementById("cartTotal");
+const checkoutButton = document.getElementById("checkoutButton");
 
-const container =
-document.getElementById("cartItems");
+// Converts ₹120, "120", or "1,200" into a number.
+function parsePrice(value){
+  return Number(String(value ?? "").replace(/[₹,\s]/g, ""));
+}
+
+function removeFromCart(id){
+  let updatedCart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+  updatedCart = updatedCart.filter(car => car.id != id);
+
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+  location.reload();
+}
 
 if(cart.length === 0){
 
-container.innerHTML = `
-<h2 style="text-align:center;">
-Your cart is empty
-</h2>
-`;
+  container.innerHTML = `
+    <h2 style="text-align:center;">Your cart is empty</h2>
+  `;
+
+  checkoutButton.disabled = true;
 
 }else{
 
-cart.forEach(car=>{
+  let total = 0;
+  let validPrices = true;
 
-container.innerHTML += `
-<div class="cart-card">
+  cart.forEach((car, index) => {
 
-<img src="${car.image}">
+    const price = parsePrice(car.price);
 
-<h2>${car.name}</h2>
+    if(!Number.isFinite(price) || price < 0){
+      validPrices = false;
+    }else{
+      total += price;
+    }
 
-<div class="price">
-₹${car.price}
-</div>
+    const card = document.createElement("div");
+    card.className = "cart-card";
 
-<button
-onclick="removeFromCart('${car.id}')"
-style="
-margin-top:15px;
-padding:12px 20px;
-border:none;
-border-radius:12px;
-background:#dc2626;
-color:white;
-font-weight:700;
-cursor:pointer;
-">
-🗑 Remove
-</button>
+    const img = document.createElement("img");
+    img.src = car.image || "";
+    img.alt = car.name || "Car";
 
-</div>
-`;
+    const title = document.createElement("h2");
+    title.textContent = car.name || "Unnamed car";
 
-});
+    const priceElement = document.createElement("div");
+    priceElement.className = "price";
+    priceElement.textContent =
+      Number.isFinite(price) ? "₹" + price.toLocaleString("en-IN") : "Invalid price";
 
+    const removeButton = document.createElement("button");
+    removeButton.textContent = "🗑 Remove";
+    removeButton.style.cssText = `
+      margin-top:15px;
+      padding:12px 20px;
+      border:none;
+      border-radius:12px;
+      background:#dc2626;
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+    `;
+
+    removeButton.onclick = () => removeFromCart(car.id);
+
+    card.append(img, title, priceElement, removeButton);
+    container.appendChild(card);
+  });
+
+  if(validPrices){
+    totalElement.textContent =
+      "Total: ₹" + total.toLocaleString("en-IN");
+  }else{
+    totalElement.textContent =
+      "Please check the price of your car.";
+    checkoutButton.disabled = true;
+  }
 }
 
 function goCheckout(){
 
-const cart =
-JSON.parse(localStorage.getItem("cart")) || [];
+  const currentCart =
+    JSON.parse(localStorage.getItem("cart")) || [];
 
-const names =
-cart.map(car => car.name).join(", ");
-const owner =
-cart[0]?.owner || "r3y";
+  if(currentCart.length === 0) return;
 
-const prices =
-cart.map(car => car.price).join(", ");
+  const names = currentCart
+    .map(car => car.name)
+    .join(", ");
 
-const total =
-cart.reduce(
-(sum, car) =>
-sum + Number(car.price),
-0
-);
+  const total = currentCart.reduce((sum, car) => {
+    const price = parsePrice(car.price);
+    if(!Number.isFinite(price) || price < 0){
+      throw new Error("Invalid car price");
+    }
+    return sum + price;
+  }, 0);
 
-window.location.href =
-`order.html?cars=${encodeURIComponent(names)}&prices=${encodeURIComponent(prices)}&total=${total}&owner=${owner}`;
-}
-function removeFromCart(id){
+  const owner = currentCart[0]?.owner || "r3y";
 
-let cart =
-JSON.parse(localStorage.getItem("cart")) || [];
+  const params = new URLSearchParams({
+    cars: names,
+    total: String(total),
+    owner: owner
+  });
 
-cart = cart.filter(car => car.id != id);
-
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
-
-location.reload();
-
+  window.location.href = "order.html?" + params.toString();
 }
 </script>
 
