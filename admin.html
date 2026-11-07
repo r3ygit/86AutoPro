@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,7 @@ body{background:#0b0b0b;color:white;display:flex;justify-content:center;min-heig
 h1{text-align:center;margin-bottom:25px}
 input:not([type=checkbox]),select{width:100%;padding:14px;margin-bottom:15px;border:0;border-radius:10px;background:#222;color:white}
 button{width:100%;padding:14px;border:0;border-radius:10px;background:#ff8a00;color:white;font-weight:bold;cursor:pointer;margin:5px 0}
+button:disabled{opacity:.5;cursor:not-allowed}
 .car-item{background:#222;padding:15px;border-radius:12px;margin-top:12px;overflow-wrap:anywhere}
 #message{margin-top:15px;overflow-wrap:anywhere}
 .assoc{display:flex;align-items:center;gap:10px;margin:10px 0 15px}
@@ -33,10 +35,14 @@ button{width:100%;padding:14px;border:0;border-radius:10px;background:#ff8a00;co
 
 <label class="small">Main car image (required)</label>
 <input id="image" type="file" accept="image/*">
+
 <label class="small">Second image (optional)</label>
 <input id="image2" type="file" accept="image/*">
+
 <label class="small">Third image (optional)</label>
 <input id="image3" type="file" accept="image/*">
+
+<p class="small">Get Pronto free plan: maximum 10 MB per image.</p>
 
 <select id="owner">
 <option value="r3y">R3Y</option>
@@ -62,22 +68,37 @@ Associated Company Car
 
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import GetProntoClient from "https://esm.sh/getpronto-sdk";
 
 const SUPABASE_URL = "https://juwpebbsyeixiaxqhvok.supabase.co";
 const SUPABASE_KEY = "sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv";
+
+const PRONTO_PUBLIC_KEY = "pronto_pk__6DXam4Js5FpzGdeaUa4qZAAelkGm";
+
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const pronto = new GetProntoClient({
+  apiKey: PRONTO_PUBLIC_KEY
+});
+
 const el = id => document.getElementById(id);
-const message = text => { el("message").textContent = text; };
+const message = text => {
+  el("message").textContent = text;
+};
 
 el("isAssociated").addEventListener("change", () => {
   el("associatedCompany").disabled = !el("isAssociated").checked;
-  if (!el("isAssociated").checked) el("associatedCompany").value = "";
+
+  if (!el("isAssociated").checked) {
+    el("associatedCompany").value = "";
+  }
 });
 
 async function loadCars() {
   const { data, error } = await supabase
-    .from("cars").select("*").order("id", { ascending: false });
+    .from("cars")
+    .select("*")
+    .order("id", { ascending: false });
 
   if (error) {
     message("Could not load cars: " + error.message);
@@ -105,41 +126,96 @@ async function loadCars() {
     }
 
     const statusButton = document.createElement("button");
-    statusButton.textContent = car.status === "sold" ? "Mark Available" : "Mark Sold";
+    statusButton.textContent =
+      car.status === "sold" ? "Mark Available" : "Mark Sold";
+
     statusButton.onclick = async () => {
-      const { error } = await supabase.from("cars")
-        .update({ status: car.status === "sold" ? "available" : "sold" })
+      statusButton.disabled = true;
+
+      const { error } = await supabase
+        .from("cars")
+        .update({
+          status: car.status === "sold" ? "available" : "sold"
+        })
         .eq("id", car.id);
-      if (error) message("Status update failed: " + error.message);
-      else { message("Status updated."); await loadCars(); }
+
+      if (error) {
+        message("Status update failed: " + error.message);
+      } else {
+        message("Status updated.");
+        await loadCars();
+      }
     };
+
     item.appendChild(statusButton);
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete Car";
+
     deleteButton.onclick = async () => {
       if (!confirm("Delete this car?")) return;
-      const { error } = await supabase.from("cars").delete().eq("id", car.id);
-      if (error) message("Delete failed: " + error.message);
-      else { message("Car deleted."); await loadCars(); }
-    };
-    item.appendChild(deleteButton);
 
+      deleteButton.disabled = true;
+
+      const { error } = await supabase
+        .from("cars")
+        .delete()
+        .eq("id", car.id);
+
+      if (error) {
+        message("Delete failed: " + error.message);
+        deleteButton.disabled = false;
+      } else {
+        message("Car deleted.");
+        await loadCars();
+      }
+    };
+
+    item.appendChild(deleteButton);
     el("carsList").appendChild(item);
   }
+}
+
+async function uploadImage(file) {
+  if (!file) return null;
+
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Please select an image file.");
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    throw new Error(file.name + " is larger than 10 MB.");
+  }
+
+  const result = await pronto.files.upload(file);
+
+  const uploadedFile = result?.data;
+
+  if (!uploadedFile?.secureUrl && !uploadedFile?.rawUrl) {
+    throw new Error("Get Pronto did not return an image URL.");
+  }
+
+  return uploadedFile.secureUrl || uploadedFile.rawUrl;
 }
 
 async function uploadCar() {
   const name = el("name").value.trim();
   const price = el("price").value;
+
   const file = el("image").files[0];
   const file2 = el("image2").files[0];
   const file3 = el("image3").files[0];
+
   const associated = el("isAssociated").checked;
   const company = el("associatedCompany").value.trim();
 
   if (!name || !price || !file) {
     message("Please enter a car name, price, and main image.");
+    return;
+  }
+
+  if (Number(price) <= 0) {
+    message("Please enter a valid price.");
     return;
   }
 
@@ -150,39 +226,42 @@ async function uploadCar() {
 
   el("addButton").disabled = true;
   el("addButton").textContent = "Uploading...";
-  message("Uploading images...");
-
+  
   try {
-    const uploadImage = async file => {
-      if (!file) return null;
-      const path = Date.now() + "-" + Math.random().toString(36).slice(2) + "-" +
-        file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-
-      const { error } = await supabase.storage.from("cars").upload(path, file);
-      if (error) throw error;
-
-      return `${SUPABASE_URL}/storage/v1/object/public/cars/${path}`;
-    };
+    message("Uploading main image to Get Pronto...");
 
     const image = await uploadImage(file);
-    const image2 = await uploadImage(file2);
-    const image3 = await uploadImage(file3);
 
-    message("Saving car details...");
+    let image2 = null;
+    let image3 = null;
 
-    const { error } = await supabase.from("cars").insert([{
-      name,
-      price: Number(price),
-      status: el("status").value,
-      owner: el("owner").value,
-      instagram: el("instagram").value.trim(),
-      description: el("description").value.trim(),
-      is_associated: associated,
-      associated_company: associated ? company : null,
-      image,
-      image2,
-      image3
-    }]);
+    if (file2) {
+      message("Uploading second image...");
+      image2 = await uploadImage(file2);
+    }
+
+    if (file3) {
+      message("Uploading third image...");
+      image3 = await uploadImage(file3);
+    }
+
+    message("Saving car details to Supabase...");
+
+    const { error } = await supabase
+      .from("cars")
+      .insert([{
+        name,
+        price: Number(price),
+        status: el("status").value,
+        owner: el("owner").value,
+        instagram: el("instagram").value.trim(),
+        description: el("description").value.trim(),
+        is_associated: associated,
+        associated_company: associated ? company : null,
+        image,
+        image2,
+        image3
+      }]);
 
     if (error) throw error;
 
@@ -201,7 +280,9 @@ async function uploadCar() {
     el("associatedCompany").disabled = true;
 
     await loadCars();
+
   } catch (error) {
+    console.error(error);
     message("Upload failed: " + (error.message || String(error)));
   } finally {
     el("addButton").disabled = false;
@@ -210,6 +291,7 @@ async function uploadCar() {
 }
 
 el("addButton").addEventListener("click", uploadCar);
+
 loadCars();
 </script>
 </body>
