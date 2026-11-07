@@ -1,23 +1,49 @@
+
 {
+  "id": "./",
   "name": "86AutoPro",
   "short_name": "86AutoPro",
-  "description": "Premium CPM Marketplace",
+  "description": "Premium Car Parking Multiplayer Marketplace",
+  "lang": "en-IN",
+  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "portrait",
   "background_color": "#050505",
   "theme_color": "#ff7a00",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "launchericon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "launchericon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "launchericon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/showcase-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "86AutoPro Mobile Marketplace"
     }
   ]
 }
