@@ -1,203 +1,94 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>86AutoPro Cart</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="theme-color" content="#090909">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
 <style>
-body{
-background:#050505;
-color:white;
-font-family:Inter,sans-serif;
-padding:20px;
-margin:0;
-}
-h1{text-align:center;margin-bottom:30px}
-#cartItems{
-max-width:1000px;
-margin:auto;
-display:grid;
-gap:20px;
-}
-.cart-card{
-background:rgba(255,255,255,.06);
-border:1px solid rgba(255,255,255,.08);
-border-radius:25px;
-padding:15px;
-}
-.cart-card img{
-width:100%;
-max-width:250px;
-border-radius:20px;
-display:block;
-margin:auto;
-}
-.price{
-font-size:24px;
-font-weight:800;
-color:#ff8a00;
-margin-top:10px;
-}
-.checkout-btn{
-display:block;
-width:100%;
-max-width:350px;
-margin:30px auto;
-padding:18px;
-text-align:center;
-background:linear-gradient(135deg,#ff7a00,#ffb347);
-border:0;
-border-radius:18px;
-color:white;
-font-weight:800;
-cursor:pointer;
-}
-.checkout-btn:disabled{
-opacity:.4;
-cursor:not-allowed;
-}
-.total{
-max-width:1000px;
-margin:25px auto;
-text-align:center;
-font-size:25px;
-font-weight:800;
-color:#ff8a00;
-}
+.cart-card{display:flex;gap:18px;align-items:center;padding:14px}
+.cart-card img{width:90px;height:160px;object-fit:cover;border-radius:14px}
+.cart-card h2{font-size:18px;margin-bottom:6px}
+.rm{margin-top:12px;padding:10px 16px;border:1px solid var(--bd);border-radius:12px;background:transparent;color:#fff;font-weight:600;cursor:pointer;transition:.2s}.rm:hover{border-color:var(--red);color:var(--red)}
+.total{text-align:center;font-size:26px;font-weight:800;margin:28px 0}
 </style>
 </head>
-
 <body>
-
-<h1>🛒 Your Cart</h1>
-
-<div id="cartItems"></div>
-<div class="total" id="cartTotal"></div>
-
-<button class="checkout-btn" id="checkoutButton" onclick="goCheckout()">
-Proceed To Checkout
-</button>
+<nav class="nav">
+  <a href="index.html" class="logo-crop"><img src="logo.PNG" alt="86AutoPro"></a>
+  <div class="nav-links"><a href="index.html">← Marketplace</a></div>
+</nav>
+<div class="wrap" style="max-width:800px">
+  <h1 class="title">Your Cart</h1>
+  <div id="cartItems" style="display:grid;gap:16px;margin-top:30px"></div>
+  <div class="total" id="cartTotal"></div>
+  <button class="btn" id="checkoutButton" onclick="goCheckout()" style="display:block;width:100%;max-width:360px;margin:auto">Proceed To Checkout</button>
+</div>
 
 <script>
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
 const container = document.getElementById("cartItems");
 const totalElement = document.getElementById("cartTotal");
 const checkoutButton = document.getElementById("checkoutButton");
 
-// Converts ₹120, "120", or "1,200" into a number.
-function parsePrice(value){
-  return Number(String(value ?? "").replace(/[₹,\s]/g, ""));
-}
+function parsePrice(value){ return Number(String(value ?? "").replace(/[₹,\s]/g, "")); }
 
 function removeFromCart(id){
-  let updatedCart =
-    JSON.parse(localStorage.getItem("cart")) || [];
-
+  let updatedCart = JSON.parse(localStorage.getItem("cart")) || [];
   updatedCart = updatedCart.filter(car => car.id != id);
-
   localStorage.setItem("cart", JSON.stringify(updatedCart));
   location.reload();
 }
 
 if(cart.length === 0){
-
-  container.innerHTML = `
-    <h2 style="text-align:center;">Your cart is empty</h2>
-  `;
-
+  container.innerHTML = '<p class="sub">Your cart is empty</p>';
   checkoutButton.disabled = true;
-
 }else{
-
-  let total = 0;
-  let validPrices = true;
-
-  cart.forEach((car, index) => {
-
+  let total = 0, validPrices = true;
+  cart.forEach(car => {
     const price = parsePrice(car.price);
-
-    if(!Number.isFinite(price) || price < 0){
-      validPrices = false;
-    }else{
-      total += price;
-    }
+    if(!Number.isFinite(price) || price < 0){ validPrices = false; } else { total += price; }
 
     const card = document.createElement("div");
-    card.className = "cart-card";
-
+    card.className = "card cart-card";
     const img = document.createElement("img");
-    img.src = car.image || "";
-    img.alt = car.name || "Car";
-
+    img.src = car.image || ""; img.alt = car.name || "Car";
+    const info = document.createElement("div");
     const title = document.createElement("h2");
     title.textContent = car.name || "Unnamed car";
-
-    const priceElement = document.createElement("div");
-    priceElement.className = "price";
-    priceElement.textContent =
-      Number.isFinite(price) ? "₹" + price.toLocaleString("en-IN") : "Invalid price";
-
-    const removeButton = document.createElement("button");
-    removeButton.textContent = "🗑 Remove";
-    removeButton.style.cssText = `
-      margin-top:15px;
-      padding:12px 20px;
-      border:none;
-      border-radius:12px;
-      background:#dc2626;
-      color:white;
-      font-weight:700;
-      cursor:pointer;
-    `;
-
-    removeButton.onclick = () => removeFromCart(car.id);
-
-    card.append(img, title, priceElement, removeButton);
+    const pe = document.createElement("div");
+    pe.className = "price"; pe.style.marginBottom = "0";
+    pe.textContent = Number.isFinite(price) ? "₹" + price.toLocaleString("en-IN") : "Invalid price";
+    const rb = document.createElement("button");
+    rb.className = "rm"; rb.textContent = "🗑 Remove";
+    rb.onclick = () => removeFromCart(car.id);
+    info.append(title, pe, rb);
+    card.append(img, info);
     container.appendChild(card);
   });
-
   if(validPrices){
-    totalElement.textContent =
-      "Total: ₹" + total.toLocaleString("en-IN");
+    totalElement.innerHTML = 'Total: <span style="color:var(--red)">₹' + total.toLocaleString("en-IN") + '</span>';
   }else{
-    totalElement.textContent =
-      "Please check the price of your car.";
+    totalElement.textContent = "Please check the price of your car.";
     checkoutButton.disabled = true;
   }
 }
 
 function goCheckout(){
-
-  const currentCart =
-    JSON.parse(localStorage.getItem("cart")) || [];
-
+  const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
   if(currentCart.length === 0) return;
-
-  const names = currentCart
-    .map(car => car.name)
-    .join(", ");
-
+  const names = currentCart.map(car => car.name).join(", ");
   const total = currentCart.reduce((sum, car) => {
     const price = parsePrice(car.price);
-    if(!Number.isFinite(price) || price < 0){
-      throw new Error("Invalid car price");
-    }
+    if(!Number.isFinite(price) || price < 0) throw new Error("Invalid car price");
     return sum + price;
   }, 0);
-
   const owner = currentCart[0]?.owner || "r3y";
-
-  const params = new URLSearchParams({
-    cars: names,
-    total: String(total),
-    owner: owner
-  });
-
+  const params = new URLSearchParams({ cars: names, total: String(total), owner: owner });
   window.location.href = "order.html?" + params.toString();
 }
 </script>
-
 </body>
 </html>
