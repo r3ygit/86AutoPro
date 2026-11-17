@@ -1,349 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>86AutoPro Car Details</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-    body::before{
-content:'';
-position:fixed;
-width:500px;
-height:500px;
-background:#ff7a0030;
-filter:blur(180px);
-top:-150px;
-right:-150px;
-z-index:-1;
-}
-
-body::after{
-content:'';
-position:fixed;
-width:500px;
-height:500px;
-background:#ff950020;
-filter:blur(180px);
-bottom:-150px;
-left:-150px;
-z-index:-1;
-}
-body{
-background:#050505;
-color:white;
-font-family:'Inter',sans-serif;
-margin:0;
-padding:25px;
-}
-
-#carDetails{
-max-width:1000px;
-margin:auto;
-}
-
-img{
-display:block;
-}
-</style>
+<meta name="theme-color" content="#090909">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
 </head>
-
 <body>
-
-<div id="carDetails">
-Loading...
-</div>
+<nav class="nav">
+  <a href="index.html" class="logo-crop"><img src="logo.PNG" alt="86AutoPro"></a>
+  <div class="nav-links"><a href="cart.html" class="btn" style="padding:10px 18px;color:#fff">🛒 Cart</a></div>
+</nav>
+<div class="wrap" id="carDetails" style="max-width:900px"><div class="loading">Loading...</div></div>
 
 <script type="module">
-
-import { createClient }
-from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 const supabase = createClient(
 "https://juwpebbsyeixiaxqhvok.supabase.co",
 "sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
 );
+const carId = new URLSearchParams(window.location.search).get("id");
+const { data, error } = await supabase.from("cars").select("*").eq("id", carId).single();
 
-const params =
-new URLSearchParams(window.location.search);
-
-const carId =
-params.get("id");
-
-
-
-const { data,error } =
-await supabase
-.from("cars")
-.select("*")
-.eq("id",carId)
-.single();
-console.log(data);
 if(data){
-await supabase
-.from("cars")
-.update({
-views: (data.views || 0) + 1
-})
-.eq("id", carId);
-
-data.views = (data.views || 0) + 1;
-document.getElementById("carDetails").innerHTML = `
-
-
-<a href="index.html"
-style="
-display:inline-block;
-margin-bottom:20px;
-color:#ff8a00;
-text-decoration:none;
-font-weight:700;
-">
-← Back to Marketplace
-</a>
-
-<h1 style="
-font-size:48px;
-font-weight:800;
-margin:10px 0;
-">
-${data.name}
-</h1>
-
-<div style="
-margin-bottom:15px;
-opacity:.8;
-font-size:18px;
-">
-👁️ ${data.views || 0} Views
+  await supabase.from("cars").update({ views: (data.views || 0) + 1 }).eq("id", carId);
+  data.views = (data.views || 0) + 1;
+  document.title = data.name + " — 86AutoPro";
+  const sold = data.status === "sold";
+  const thumbs = [data.image, data.image2, data.image3].filter(Boolean)
+    .map(s => `<img src="${s}" alt="" onclick="document.getElementById('mainImage').src=this.src">`).join("");
+  document.getElementById("carDetails").innerHTML = `
+<a href="index.html" class="back">← Back to Marketplace</a>
+<h1 style="font-size:clamp(30px,6vw,48px);font-weight:900;letter-spacing:-1px;margin-bottom:10px">${data.name}</h1>
+<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px">
+  <span class="pill ${sold ? 'sold' : 'available'}" style="cursor:default;border:0;font-size:12px;padding:7px 14px">${sold ? 'SOLD OUT' : 'AVAILABLE'}</span>
+  <span style="color:var(--mut)">👁️ ${data.views || 0} Views</span>
 </div>
-
-<div style="
-display:inline-block;
-padding:10px 20px;
-border-radius:999px;
-background:${data.status === 'sold'
-? 'linear-gradient(135deg,#dc2626,#ff6b6b)'
-: 'linear-gradient(135deg,#16a34a,#4ade80)'};
-box-shadow:${data.status === 'sold'
-? '0 0 20px rgba(220,38,38,.4)'
-: '0 0 20px rgba(22,163,74,.4)'};
-font-weight:700;
-margin-bottom:20px;
-">
-${data.status === 'sold' ? 'SOLD OUT' : 'AVAILABLE'}
+<div class="price" style="font-size:34px">₹${data.price}</div>
+<img id="mainImage" src="${data.image}" alt="${data.name}" class="main-car-image" style="max-width:520px;margin:0 auto 14px">
+<div class="thumbs">${thumbs}</div>
+<div class="panel">
+  <h3>Seller</h3><p style="font-weight:700;font-size:18px">${data.seller || "Not Set"}</p>
+  <h3 style="margin-top:22px">Description</h3><p style="color:var(--mut);line-height:1.7">${data.description || "No description"}</p>
 </div>
-
-<div style="margin-bottom:20px;">
-
-<img
-id="mainImage"
-src="${data.image}"
-style="
-width:100%;
-border-radius:25px;
-aspect-ratio:9/16;
-object-fit:cover;
-margin-bottom:15px;
-">
-
-<div style="
-display:flex;
-gap:10px;
-justify-content:center;
-">
-
-<img
-src="${data.image}"
-onclick="document.getElementById('mainImage').src=this.src"
-style="
-width:90px;
-height:160px;
-object-fit:cover;
-border-radius:15px;
-cursor:pointer;
-box-shadow:0 0 15px rgba(255,122,0,.25);
-">
-
-${data.image2 ? `
-<img
-src="${data.image2}"
-onclick="document.getElementById('mainImage').src=this.src"
-style="
-width:90px;
-height:160px;
-object-fit:cover;
-border-radius:15px;
-cursor:pointer;
-">
-` : ''}
-
-${data.image3 ? `
-<img
-src="${data.image3}"
-onclick="document.getElementById('mainImage').src=this.src"
-style="
-width:90px;
-height:160px;
-object-fit:cover;
-border-radius:15px;
-cursor:pointer;
-">
-` : ''}
-
-</div>
-
-</div>
-
-<div style="
-background:rgba(255,255,255,.06);
-backdrop-filter:blur(25px);
-border:1px solid rgba(255,255,255,.08);
-border-radius:25px;
-padding:25px;
-margin:25px 0;
-">
-
-<h3 style="
-margin-top:0;
-color:#ff8a00;
-">
-👤 Seller
-</h3>
-
-<p style="
-font-size:18px;
-font-weight:700;
-">
-${data.seller || "Not Set"}
-</p>
-
-<h3 style="
-color:#ff8a00;
-margin-top:25px;
-">
-📝 Description
-</h3>
-
-<p>
-${data.description || "No description"}
-</p>
-
-</div>
-
-${data.instagram ? `
-<a
-href="${data.instagram}"
-target="_blank"
-style="
-display:inline-block;
-padding:15px 25px;
-background:linear-gradient(135deg,#E1306C,#ff6b9d);
-box-shadow:0 0 25px rgba(225,48,108,.45);
-color:white;
-text-decoration:none;
-border-radius:15px;
-font-weight:700;
-margin-right:10px;
-">
-📸 Contact Seller
-</a>
-` : ''}
-
-${data.status === 'sold'
-? ''
-: `
-<button
-onclick="addToCart()"
-style="
-display:inline-block;
-padding:15px 25px;
-background:linear-gradient(135deg,#ff7a00,#ffb347);
-box-shadow:0 0 30px rgba(255,122,0,.45);
-color:white;
-border:none;
-border-radius:15px;
-font-weight:700;
-cursor:pointer;
-margin-right:10px;
-">
-🛒 ADD TO CART
-</button>
-`
-}
-<button
-onclick="shareCar()"
-style="
-display:inline-block;
-padding:15px 25px;
-background:rgba(255,255,255,.12);
-backdrop-filter:blur(20px);
-color:white;
-border:none;
-border-radius:15px;
-font-weight:700;
-cursor:pointer;
-margin-right:10px;
-">
-🔗 Share Car
-</button>
-</div>
-`;
-
-}
-window.shareCar = async () => {
-
-if(navigator.share){
-
-await navigator.share({
-title: document.title,
-url: window.location.href
-});
-
+<div class="actions">
+  ${data.instagram ? `<a href="${data.instagram}" target="_blank" class="btn btn-ghost">📸 Contact Seller</a>` : ''}
+  ${sold ? '' : `<button onclick="addToCart()" class="btn">🛒 ADD TO CART</button>`}
+  <button onclick="shareCar()" class="btn btn-ghost">🔗 Share Car</button>
+</div>`;
 }else{
-
-await navigator.clipboard.writeText(
-window.location.href
-);
-
-alert("Car link copied!");
+  document.getElementById("carDetails").innerHTML = '<div class="loading">Car not found.</div><a href="index.html" class="back">← Back</a>';
 }
 
+window.shareCar = async () => {
+  if(navigator.share){ await navigator.share({ title: document.title, url: window.location.href }); }
+  else{ await navigator.clipboard.writeText(window.location.href); alert("Car link copied!"); }
 };
 window.addToCart = () => {
-
-let cart =
-
-JSON.parse(localStorage.getItem("cart")) || [];
-
-cart.push({
-
-id: data.id,
-
-name: data.name,
-
-price: data.price,
-
-image: data.image,
-
-owner: data.owner
-
-});
-
-localStorage.setItem(
-
-"cart",
-
-JSON.stringify(cart)
-
-);
-
-alert("Added To Cart 🛒");
-
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push({ id: data.id, name: data.name, price: data.price, image: data.image, owner: data.owner });
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Added To Cart 🛒");
 };
 </script>
-
-
-
-
-
 </body>
 </html>
