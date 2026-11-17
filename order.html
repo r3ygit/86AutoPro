@@ -1,381 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
+<meta name="theme-color" content="#090909">
 <title>86AutoPro Order</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
 <style>
-
-body{
-background:
-radial-gradient(circle at top right,#ff7a0030,transparent 40%),
-radial-gradient(circle at bottom left,#ff950020,transparent 40%),
-#050505;
-color:white;
-font-family:'Inter',sans-serif;
-padding:20px;
-text-align:center;
-min-height:100vh;
-}
-.card{
-max-width:500px;
-margin:auto;
-
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(30px);
--webkit-backdrop-filter:blur(30px);
-
-border:1px solid rgba(255,255,255,.12);
-border-radius:35px;
-
-padding:30px;
-
-box-shadow:
-0 20px 80px rgba(255,140,0,.15),
-0 0 60px rgba(255,140,0,.08);
-}
-h1{
-font-size:42px;
-font-weight:800;
-margin-bottom:10px;
-}
-
-h2{
-font-size:24px;
-font-weight:700;
-color:#ff9c2b;
-margin-bottom:25px;
-}
-input{
-width:100%;
-padding:18px;
-margin:12px 0;
-
-border:none;
-border-radius:18px;
-
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(20px);
-
-color:white;
-font-size:16px;
-font-weight:600;
-}
-
-input:focus{
-outline:none;
-box-shadow:
-0 0 20px rgba(255,122,0,.4);
-}
-button{
-width:100%;
-padding:18px;
-
-border:none;
-border-radius:18px;
-
-background:linear-gradient(
-135deg,
-#ff9500,
-#ff5e00
-);
-
-color:white;
-font-weight:800;
-font-size:17px;
-
-cursor:pointer;
-
-box-shadow:
-0 0 35px rgba(255,122,0,.45);
-
-transition:.3s;
-}
-
-button:hover{
-transform:translateY(-3px);
-}
-.qr{
-width:100%;
-max-width:260px;
-border-radius:25px;
-margin:25px auto;
-display:block;
-
-box-shadow:
-0 0 40px rgba(255,255,255,.1);
-}
-.price-box{
-margin:20px 0;
-padding:18px;
-
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(20px);
-
-border:1px solid rgba(255,255,255,.12);
-border-radius:20px;
-
-font-size:28px;
-font-weight:800;
-color:#ff8a00;
-}
-.paid-box{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:12px;
-
-margin:25px 0;
-
-padding:18px;
-
-background:rgba(255,255,255,.08);
-
-backdrop-filter:blur(20px);
-
-border:1px solid rgba(255,255,255,.12);
-
-border-radius:18px;
-
-font-weight:700;
-font-size:18px;
-
-cursor:pointer;
-
-color:#00ff88;
-}
-
-.paid-box input{
-width:22px;
-height:22px;
-
-accent-color:#00ff88;
-
-margin:0;
-}
+.box{max-width:500px;margin:20px auto;padding:30px;text-align:center;border-radius:28px}
+.qr{width:100%;max-width:260px;border-radius:20px;margin:20px auto;display:block;background:#fff}
+.price-box{margin:18px 0;padding:16px;background:var(--bg2);border:1px solid var(--bd);border-radius:16px;font-size:24px;font-weight:800}
+.paid-box{display:flex;align-items:center;justify-content:center;gap:12px;margin:20px 0;padding:16px;background:var(--bg2);border:1px solid var(--bd);border-radius:16px;font-weight:700;cursor:pointer}
+.paid-box input{width:22px;height:22px;margin:0;accent-color:var(--red)}
+.btn{width:100%}
 </style>
-
 </head>
 <body>
+<nav class="nav">
+  <a href="index.html" class="logo-crop"><img src="logo.PNG" alt="86AutoPro"></a>
+  <div class="nav-links"><a href="cart.html">← Cart</a></div>
+</nav>
 
-<div class="card">
+<div class="card box">
+  <h1 style="font-size:30px;font-weight:900;margin-bottom:8px">Complete Your Order</h1>
+  <h2 id="carName" style="font-size:18px;color:var(--mut);margin-bottom:22px"></h2>
 
-<h1>86AutoPro Order</h1>
+  <div id="formStep">
+    <input id="instagram" placeholder="Instagram ID">
+    <input id="cpmid" placeholder="CPM ID">
+    <button class="btn" onclick="showPayment()" style="margin-top:10px">NEXT</button>
+  </div>
 
-<h2 id="carName"></h2>
-
-<div id="formStep">
-
-<input
-id="instagram"
-placeholder="Instagram ID">
-
-<input
-id="cpmid"
-placeholder="CPM ID">
-
-<button onclick="showPayment()">
-NEXT
-</button>
-
-</div>
-
-<div id="paymentStep" style="display:none;">
-
-<img id="qrImage" class="qr">
-
-<div class="price-box">
-💳 Amount To Pay: ₹<span id="payAmount"></span>
-</div>
-
-<p>
-⚠️ Make sure payment is completed before submitting.
-</p>
-
-<p>
-Are you sure you have paid?
-</p>
-
-<label class="paid-box">
-
-<input
-type="checkbox"
-id="paidCheck">
-
-<span>
-✅ Payment Completed
-</span>
-
-</label>
-
-<button
-id="submitBtn"
-onclick="submitOrder()"
-disabled
-style="opacity:.5;">
-SUBMIT ORDER
-</button>
-
-</div>
-
+  <div id="paymentStep" style="display:none;">
+    <img id="qrImage" class="qr" alt="Payment QR">
+    <div class="price-box">💳 Amount To Pay: ₹<span id="payAmount"></span></div>
+    <p style="color:var(--mut)">⚠️ Make sure payment is completed before submitting.</p>
+    <p style="margin-top:8px">Are you sure you have paid?</p>
+    <label class="paid-box"><input type="checkbox" id="paidCheck"><span>Payment Completed</span></label>
+    <button class="btn" id="submitBtn" onclick="submitOrder()" disabled style="opacity:.5">SUBMIT ORDER</button>
+  </div>
 </div>
 
 <script>
+emailjs.init({ publicKey:"reBhf90INvnNqOLn8" });
 
-emailjs.init({
-publicKey:"reBhf90INvnNqOLn8"
-});
+const params = new URLSearchParams(window.location.search);
+const car = params.get("cars") || "Unknown Car";
+const price = params.get("total") || "0";
+const owner = params.get("owner") || "r3y";
 
-const params =
-new URLSearchParams(window.location.search);
+document.getElementById("carName").textContent = `${car} • ₹${price}`;
+document.getElementById("payAmount").textContent = price;
+document.getElementById("qrImage").src = owner === "r3y" ? "myqr.jpg" : "partnerqr.jpg";
 
-const car =
-params.get("cars") || "Unknown Car";
-
-const price =
-params.get("total") || "0";
-
-const owner =
-params.get("owner") || "r3y";
-document.getElementById("carName").innerHTML =
-`${car} • ₹${price}`;
-
-document.getElementById("payAmount").innerHTML =
-price;
-if(owner === "r3y"){
-document.getElementById("qrImage").src = "myqr.jpg";
-}else{
-document.getElementById("qrImage").src = "partnerqr.jpg";
-}
 function showPayment(){
-
-const insta =
-document.getElementById("instagram").value;
-
-const cpm =
-document.getElementById("cpmid").value;
-
-if(!insta || !cpm){
-alert("Please enter Instagram ID and CPM ID");
-return;
+  const insta = document.getElementById("instagram").value;
+  const cpm = document.getElementById("cpmid").value;
+  if(!insta || !cpm){ alert("Please enter Instagram ID and CPM ID"); return; }
+  document.getElementById("formStep").style.display = "none";
+  document.getElementById("paymentStep").style.display = "block";
+  window.scrollTo({ top:0, behavior:"smooth" });
 }
 
-document.getElementById("formStep").style.display = "none";
-document.getElementById("paymentStep").style.display = "block";
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
+const paidCheck = document.getElementById("paidCheck");
+const submitBtn = document.getElementById("submitBtn");
+paidCheck.addEventListener("change", () => {
+  submitBtn.disabled = !paidCheck.checked;
+  submitBtn.style.opacity = paidCheck.checked ? "1" : ".5";
 });
 
-}
-const paidCheck =
-document.getElementById("paidCheck");
-
-const submitBtn =
-document.getElementById("submitBtn");
-
-paidCheck.addEventListener("change",()=>{
-
-submitBtn.disabled = !paidCheck.checked;
-
-submitBtn.style.opacity =
-paidCheck.checked ? "1" : ".5";
-
-});
 function submitOrder(){
-
-if(!document.getElementById("paidCheck").checked){
-alert("Please confirm payment first");
-return;
-}
-
-emailjs.send(
-"service_vooqt6p",
-"template_i3art5p",
-{
-car_name: car,
-price: price,
-instagram_id:
-document.getElementById("instagram").value,
-cpm_id:
-document.getElementById("cpmid").value
-}
-)
-.then(() => {
-
-document.getElementById(
-"successPopup"
-).style.display = "flex";
-
-})
-.catch((error) => {
-console.log(error);
-alert("Error: " + JSON.stringify(error));
-});
-
+  if(!paidCheck.checked){ alert("Please confirm payment first"); return; }
+  emailjs.send("service_vooqt6p", "template_i3art5p", {
+    car_name: car,
+    price: price,
+    instagram_id: document.getElementById("instagram").value,
+    cpm_id: document.getElementById("cpmid").value
+  })
+  .then(() => { document.getElementById("successPopup").style.display = "flex"; })
+  .catch((error) => { console.log(error); alert("Error: " + JSON.stringify(error)); });
 }
 </script>
-<div id="successPopup"
-style="
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.9);
-z-index:9999;
-justify-content:center;
-align-items:center;
-">
 
-<div style="
-background:#111;
-padding:40px;
-border-radius:30px;
-text-align:center;
-max-width:350px;
-width:90%;
-">
-
-<div style="
-font-size:90px;
-color:#00ff88;
-">
-✅
-</div>
-
-<h2 style="
-color:#00ff88;
-margin:10px 0;
-">
-Order Submitted!
-</h2>
-
-<p>
-Your order was received successfully.
-</p>
-
-<a
-href="https://www.instagram.com/86autopro"
-target="_blank"
-style="
-display:inline-block;
-margin-top:20px;
-padding:15px 25px;
-border-radius:15px;
-background:linear-gradient(135deg,#E1306C,#ff6b9d);
-color:white;
-text-decoration:none;
-font-weight:700;
-">
-📸 Contact 86AutoPro
-</a>
-
-</div>
-
+<div id="successPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;justify-content:center;align-items:center">
+  <div class="card" style="padding:40px;text-align:center;max-width:350px;width:90%;border-radius:28px">
+    <div style="font-size:70px;color:var(--red)">✓</div>
+    <h2 style="margin:10px 0">Order Submitted!</h2>
+    <p style="color:var(--mut)">Your order was received successfully.</p>
+    <a href="https://www.instagram.com/86autopro" target="_blank" class="btn" style="margin-top:20px">📸 Contact 86AutoPro</a>
+  </div>
 </div>
 </body>
 </html>
