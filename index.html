@@ -8,7 +8,6 @@
 <meta name="theme-color" content="#090909">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="brand.css">
-<meta name="google-adsense-account" content="ca-pub-7364774900304796">
 </head>
 <body>
 <div id="loadingScreen" aria-hidden="true">
@@ -56,6 +55,7 @@
   <div class="nav-links">
     <a href="#carsContainer" class="hide-m">Collection</a>
     <a href="https://www.instagram.com/86autopro" target="_blank" class="hide-m">Instagram</a>
+    <a href="login.html" id="accountLink">Login</a>
     <a href="cart.html" id="cartCount" class="btn" style="padding:10px 18px">🛒 View Cart</a>
   </div>
 </nav>
@@ -85,8 +85,6 @@
   </div>
 </section>
 
-  <script src="https://bicea.org/22/d8a13d7c494e74b8eea821477d23e8e0"></script>
-</div>
 <section class="wrap">
   <h2 class="title">Featured Collection</h2>
   <p class="sub">Hand-picked CPM cars from trusted sellers.</p>
@@ -135,6 +133,8 @@
   <p>Premium CPM Marketplace</p>
   <p style="margin-top:14px;font-size:13px">© 2026 86AutoPro. All Rights Reserved.</p>
 </footer>
+
+<script type="module" src="auth.js"></script>
 
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
