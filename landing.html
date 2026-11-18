@@ -1,127 +1,60 @@
-<!DOCTYPE html>
-<html>
-<head>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>86AutoPro</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Archivo:wght@400;500;700&display=swap">
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
-}
-
-body{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:
-linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)),
-url('https://api.getpronto.io/v1/file/user-cmw62njrh992129t8b78d9peop/photo-2026-11-07-13-29-50-1794038474484-3ef116b4a9da7a44.jpg');
-
-background-size:cover;
-background-position:center;
-
-color:white;
-padding:20px;
-}
-
-.hero{
-max-width:700px;
-
-background:rgba(255,255,255,.08);
-
-backdrop-filter:blur(25px);
-
-border:1px solid rgba(255,255,255,.15);
-
-border-radius:30px;
-
-padding:30px;
-
-text-align:center;
-}
-
-h1{
-font-size:60px;
-margin-bottom:10px;
-}
-
-p{
-font-size:18px;
-opacity:.85;
-margin-bottom:25px;
-line-height:1.6;
-}
-
-.btn{
-display:inline-block;
-
-padding:18px 30px;
-
-background:linear-gradient(
-135deg,
-#ff9500,
-#ff5e00
-);
-
-color:white;
-
-text-decoration:none;
-
-font-weight:bold;
-
-border-radius:18px;
-
-box-shadow:
-0 0 30px rgba(255,122,0,.5);
-}
-
-.ticker{
-margin-top:25px;
-color:#00ff88;
-font-weight:bold;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="hero">
-
-<h1>86AutoPro</h1>
-
-<p>
-Premuim Car Parking Multiplayer vehicles from trusted sellers.
-</p>
-
-<a href="index.html" class="btn">
-🚗 EXPLORE CARS!
-</a>
-<br><br>
-
-<a
-href="https://www.instagram.com/86autopro"
-style="
-display:inline-block;
-padding:14px 28px;
-background:rgba(255,255,255,.1);
-color:white;
-text-decoration:none;
-border-radius:15px;
-font-weight:bold;
-">
-Follow Us
-</a>
-<div class="ticker">
-Premium CPM Cars • Trusted Sellers • Secure Buying
-</div>
-
-</div>
-
-</body>
-</html>
+:root{color-scheme:dark;--red:#f30313;--ink:#050505;--paper:#f6f3f1;--mute:#b9b2ae;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--paper);font:400 17px/1.55 Archivo,system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3,.btn{font-family:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;font-weight:900;text-transform:uppercase;line-height:.9}
+.hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;padding:28px clamp(20px,5vw,64px) 48px;isolation:isolate;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url(car.PNG) 50% 86%/cover;animation:push 2.4s cubic-bezier(.2,.7,.2,1) both}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(5,5,5,.88) 0,rgba(5,5,5,.5) 45%,rgba(5,5,5,0) 75%),linear-gradient(0deg,rgba(5,5,5,.95),rgba(5,5,5,0) 45%)}
+@keyframes push{from{transform:scale(1.14);filter:brightness(.4)}to{transform:none;filter:none}}
+.logo{width:clamp(150px,18vw,230px);display:block}
+.copy{max-width:720px}
+h1{font-size:clamp(64px,13vw,190px);letter-spacing:-.01em}
+h1 span{display:block;color:var(--red)}
+.copy p{margin:22px 0 30px;max-width:46ch;color:#e7e1de;font-size:clamp(17px,2vw,20px)}
+.btn{display:inline-flex;align-items:center;gap:14px;background:var(--red);color:#fff;text-decoration:none;font-size:26px;letter-spacing:.04em;padding:20px 34px 18px;border-radius:2px;transition:transform .2s,background .2s;line-height:1}
+.btn:hover{background:#fff;color:var(--red);transform:translateX(6px)}
+.btn:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.btn svg{width:26px;height:26px}
+.ghost{margin-left:22px;color:var(--paper);text-decoration:underline;text-underline-offset:6px}
+.belt{background:var(--red);color:#fff;overflow:hidden;white-space:nowrap;padding:16px 0 12px}
+.belt div{display:inline-block;font:900 34px/1 "Big Shoulders Display",Impact,sans-serif;text-transform:uppercase;animation:run 28s linear infinite}
+@keyframes run{to{transform:translateX(-50%)}}
+section{padding:clamp(64px,10vw,130px) clamp(20px,5vw,64px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0;border-top:2px solid var(--red);margin-top:48px}
+h2{font-size:clamp(46px,8vw,110px);max-width:12ch}
+.grid div{padding:28px 24px 34px 0;border-bottom:1px solid #2b2b2b}
+.grid h3{font-size:38px;margin-bottom:12px}
+.grid p{color:var(--mute);max-width:30ch}
+.cta{background:var(--red);text-align:center;padding:clamp(70px,12vw,150px) 20px}
+.cta img{width:min(520px,80%);margin:0 auto 36px;display:block}
+.cta .btn{background:#fff;color:var(--red)}
+.cta .btn:hover{background:var(--ink);color:#fff}
+footer{padding:26px;text-align:center;color:var(--mute);font-size:14px}
+@media(max-width:700px){.hero::before{background-position:62% 92%}.ghost{display:block;margin:20px 0 0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+<header class="hero">
+<img class="logo" alt="86AutoPro" src="logo.PNG">
+<div class="copy">
+<h1>Built right.<span>Driven hard.</span></h1>
+<p>86AutoPro is your garage for performance, off-road builds and honest repair work. Step inside and see what we do.</p>
+<a class="btn" id="enter" href="https://r3ygit.github.io/86AutoPro/index.html">Enter 86AutoPro <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h16M13 5l7 7-7 7"/></svg></a>
+<a class="ghost" href="#what">What we do</a>
+</div></header>
+<div class="belt" aria-hidden="true"><div>Performance &nbsp;&#9679;&nbsp; Off-road builds &nbsp;&#9679;&nbsp; Repair &nbsp;&#9679;&nbsp; Wheels &amp; tires &nbsp;&#9679;&nbsp; Custom bumpers &nbsp;&#9679;&nbsp; Performance &nbsp;&#9679;&nbsp; Off-road builds &nbsp;&#9679;&nbsp; Repair &nbsp;&#9679;&nbsp; Wheels &amp; tires &nbsp;&#9679;&nbsp; Custom bumpers &nbsp;&#9679;&nbsp;</div></div>
+<section id="what"><h2>One shop. Every build.</h2>
+<div class="grid">
+<div><h3>Performance</h3><p>Tuning and upgrades that make your car feel faster the moment you drive off.</p></div>
+<div><h3>Off-road</h3><p>Lifts, winch bumpers, lights and armor for trucks and Jeeps that leave the pavement.</p></div>
+<div><h3>Repair</h3><p>Clear diagnosis, fair prices and work done right the first time.</p></div>
+<div><h3>Wheels and tires</h3><p>The right fit and the right look, mounted and balanced.</p></div>
+</div></section>
+<div class="cta"><img alt="86AutoPro" src="logo.PNG"><a class="btn" href="https://r3ygit.github.io/86AutoPro/index.html">Go to main page <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12h16M13 5l7 7-7 7"/></svg></a></div>
+<footer>&copy; 2026 86AutoPro</footer>
+</body></html>
