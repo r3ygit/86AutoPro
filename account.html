@@ -29,7 +29,9 @@ import { account, verifyUrl, currentUser, errMsg, say } from "./auth.js";
 
 const msg = document.getElementById("msg");
 const user = await currentUser();
-if (!user) location.replace("login.html");
+if (!user) {
+  location.replace("login.html");
+} else {
 
 const info = document.getElementById("info");
 info.textContent = "";
@@ -59,6 +61,8 @@ document.getElementById("logoutBtn").onclick = async () => {
   try { await account.deleteSession("current"); } catch (_) {}
   location.href = "index.html";
 };
+
+}
 </script>
 </body>
 </html>
