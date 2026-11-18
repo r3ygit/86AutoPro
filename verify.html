@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>Verify Email — 86AutoPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo-crop"><img src="logo.PNG" alt="86AutoPro"></a>
+</nav>
+<div class="card auth-box">
+  <h1>Email verification</h1>
+  <p class="sub" id="status">Verifying your email...</p>
+  <div id="msg" class="msg"></div>
+  <a href="account.html" class="btn" style="width:100%">GO TO MY ACCOUNT</a>
+</div>
+
+<script type="module">
+import { account, errMsg, say } from "./auth.js";
+const p = new URLSearchParams(location.search);
+const userId = p.get("userId"), secret = p.get("secret");
+const status = document.getElementById("status");
+const msg = document.getElementById("msg");
+if (!userId || !secret) {
+  status.textContent = "";
+  say(msg, "This verification link is invalid or incomplete.");
+} else {
+  try {
+    await account.updateVerification(userId, secret);
+    status.textContent = "";
+    say(msg, "Your email is verified. Thank you!", true);
+  } catch (e) {
+    status.textContent = "";
+    say(msg, errMsg(e) + " You can request a new link from your account page.");
+  }
+}
+</script>
+</body>
+</html>
