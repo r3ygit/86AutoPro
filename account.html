@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>My Account — 86AutoPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo-crop"><img src="logo.PNG" alt="86AutoPro"></a>
+  <div class="nav-links"><a href="index.html">← Marketplace</a><a href="cart.html">Cart</a></div>
+</nav>
+
+<div class="card auth-box">
+  <h1>My Account</h1>
+  <p class="sub">Only you can see this information.</p>
+  <div id="msg" class="msg"></div>
+  <div id="info"><p class="sub">Loading...</p></div>
+  <button class="btn" id="resendBtn" style="display:none">RESEND VERIFICATION EMAIL</button>
+  <button class="btn btn-ghost" id="logoutBtn" style="margin-top:12px">LOG OUT</button>
+</div>
+
+<script type="module">
+import { account, verifyUrl, currentUser, errMsg, say } from "./auth.js";
+
+const msg = document.getElementById("msg");
+const user = await currentUser();
+if (!user) location.replace("login.html");
+
+const info = document.getElementById("info");
+info.textContent = "";
+function row(label, valueNode){
+  const r = document.createElement("div"); r.className = "row";
+  const a = document.createElement("span"); a.textContent = label;
+  const b = document.createElement("span");
+  if (typeof valueNode === "string") b.textContent = valueNode; else b.appendChild(valueNode);
+  r.append(a, b); info.appendChild(r);
+}
+const status = document.createElement("span");
+status.className = user.emailVerification ? "badge-ok" : "badge-no";
+status.textContent = user.emailVerification ? "Verified ✓" : "Not verified";
+row("Name", user.name || "—");
+row("Email", user.email);
+row("Email status", status);
+
+if (!user.emailVerification) document.getElementById("resendBtn").style.display = "block";
+if (new URLSearchParams(location.search).get("welcome"))
+  say(msg, "Account created! We sent a verification link to your email.", true);
+
+document.getElementById("resendBtn").onclick = async () => {
+  try { await account.createVerification(verifyUrl); say(msg, "Verification email sent. Check your inbox and spam folder.", true); }
+  catch (e) { say(msg, errMsg(e)); }
+};
+document.getElementById("logoutBtn").onclick = async () => {
+  try { await account.deleteSession("current"); } catch (_) {}
+  location.href = "index.html";
+};
+</script>
+</body>
+</html>
