@@ -1,0 +1,11 @@
+.wish-btn{position:absolute;top:22px;left:22px;z-index:6;width:40px;height:40px;border-radius:50%;border:1px solid var(--bd);background:rgba(9,9,9,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:grid;place-items:center;cursor:pointer;color:#fff;padding:0;transition:.25s}
+.wish-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:.25s}
+.wish-btn:hover{border-color:var(--red);transform:scale(1.08)}
+.wish-btn.saved{color:var(--red);border-color:var(--red)}
+.wish-btn.saved svg{fill:var(--red)}
+.wish-btn.pop svg{animation:heartpop .35s ease}
+.wish-btn:disabled{opacity:.6;cursor:wait}
+.wish-btn:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+@keyframes heartpop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+.wish-count{display:inline-block;min-width:18px;padding:0 6px;border-radius:999px;background:var(--red);color:#fff;font-size:11px;line-height:18px;text-align:center;margin-left:4px}
+.wish-count:empty{display:none}
