@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>Login — 86AutoPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo-crop"><img src="logo.PNG" alt="86AutoPro"></a>
+  <div class="nav-links"><a href="index.html">← Marketplace</a></div>
+</nav>
+
+<div class="card auth-box">
+  <div class="tabs">
+    <button class="pill active" id="tabLogin">Login</button>
+    <button class="pill" id="tabRegister">Create account</button>
+  </div>
+  <div id="msg" class="msg"></div>
+
+  <form id="loginForm">
+    <h1>Welcome back</h1><p class="sub">Log in to your 86AutoPro account.</p>
+    <input type="email" id="lEmail" placeholder="Email" autocomplete="email" required>
+    <input type="password" id="lPass" placeholder="Password" autocomplete="current-password" required>
+    <button class="btn" type="submit">LOGIN</button>
+    <button class="link" type="button" id="showForgot">Forgot password?</button>
+  </form>
+
+  <form id="registerForm" style="display:none">
+    <h1>Create account</h1><p class="sub">Join 86AutoPro in under a minute.</p>
+    <input type="text" id="rName" placeholder="Name (e.g. your CPM name)" autocomplete="name" required>
+    <input type="email" id="rEmail" placeholder="Email" autocomplete="email" required>
+    <input type="password" id="rPass" placeholder="Password (min 8 characters)" minlength="8" autocomplete="new-password" required>
+    <button class="btn" type="submit">CREATE ACCOUNT</button>
+  </form>
+
+  <form id="forgotForm" style="display:none">
+    <h1>Reset password</h1><p class="sub">We'll email you a reset link.</p>
+    <input type="email" id="fEmail" placeholder="Email" autocomplete="email" required>
+    <button class="btn" type="submit">SEND RESET LINK</button>
+    <button class="link" type="button" id="backLogin">Back to login</button>
+  </form>
+</div>
+
+<script type="module">
+import { account, ID, verifyUrl, recoveryUrl, currentUser, errMsg, say } from "./auth.js";
+
+const $ = (id) => document.getElementById(id);
+const msg = $("msg");
+const forms = { login: $("loginForm"), register: $("registerForm"), forgot: $("forgotForm") };
+
+function show(name){
+  Object.entries(forms).forEach(([k, f]) => f.style.display = k === name ? "block" : "none");
+  $("tabLogin").classList.toggle("active", name === "login");
+  $("tabRegister").classList.toggle("active", name === "register");
+  say(msg, "");
+}
+$("tabLogin").onclick = () => show("login");
+$("tabRegister").onclick = () => show("register");
+$("showForgot").onclick = () => show("forgot");
+$("backLogin").onclick = () => show("login");
+
+if (await currentUser()) location.replace("account.html");
+
+forms.login.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await account.createEmailPasswordSession($("lEmail").value.trim(), $("lPass").value);
+    location.href = "account.html";
+  } catch (err) { say(msg, errMsg(err)); }
+});
+
+forms.register.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = $("rEmail").value.trim(), pass = $("rPass").value;
+  try {
+    await account.create(ID.unique(), email, pass, $("rName").value.trim());
+    await account.createEmailPasswordSession(email, pass);
+    try { await account.createVerification(verifyUrl); } catch (_) {}
+    location.href = "account.html?welcome=1";
+  } catch (err) { say(msg, errMsg(err)); }
+});
+
+forms.forgot.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await account.createRecovery($("fEmail").value.trim(), recoveryUrl);
+    say(msg, "If that email has an account, a reset link is on its way. Check your inbox and spam folder.", true);
+  } catch (err) { say(msg, errMsg(err)); }
+});
+</script>
+</body>
+</html>
