@@ -53,6 +53,16 @@ const $ = (id) => document.getElementById(id);
 const msg = $("msg");
 const forms = { login: $("loginForm"), register: $("registerForm"), forgot: $("forgotForm") };
 
+// Only allow returning to a simple page in this same folder (e.g. index.html, car.html?id=5)
+function safeReturn(){
+  let r = null;
+  try { r = sessionStorage.getItem("returnTo"); } catch (_) {}
+  return r && /^[A-Za-z0-9_\-]+\.html(\?[A-Za-z0-9_=&.%\-]*)?$/.test(r) ? r : null;
+}
+function clearReturn(){
+  try { sessionStorage.removeItem("returnTo"); sessionStorage.removeItem("loginMsg"); } catch (_) {}
+}
+
 function show(name){
   Object.entries(forms).forEach(([k, f]) => f.style.display = k === name ? "block" : "none");
   $("tabLogin").classList.toggle("active", name === "login");
@@ -64,13 +74,26 @@ $("tabRegister").onclick = () => show("register");
 $("showForgot").onclick = () => show("forgot");
 $("backLogin").onclick = () => show("login");
 
-if (await currentUser()) location.replace("account.html");
+// Already logged in? Go back to where they came from, or to the account page
+if (await currentUser()) {
+  const back = safeReturn();
+  clearReturn();
+  location.replace(back || "account.html");
+}
+
+// "Please log in to ..." message left by the page that sent them here
+try {
+  const m = sessionStorage.getItem("loginMsg");
+  if (m) say(msg, m, true);
+} catch (_) {}
 
 forms.login.addEventListener("submit", async (e) => {
   e.preventDefault();
   try {
     await account.createEmailPasswordSession($("lEmail").value.trim(), $("lPass").value);
-    location.href = "account.html";
+    const back = safeReturn();
+    clearReturn();
+    location.href = back || "account.html";
   } catch (err) { say(msg, errMsg(err)); }
 });
 
@@ -81,7 +104,9 @@ forms.register.addEventListener("submit", async (e) => {
     await account.create(ID.unique(), email, pass, $("rName").value.trim());
     await account.createEmailPasswordSession(email, pass);
     try { await account.createVerification(verifyUrl); } catch (_) {}
-    location.href = "account.html?welcome=1";
+    const back = safeReturn();
+    clearReturn();
+    location.href = back || "account.html?welcome=1";
   } catch (err) { say(msg, errMsg(err)); }
 });
 
