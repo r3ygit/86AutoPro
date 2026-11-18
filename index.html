@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#090909">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="wishlist.css">
 </head>
 <body>
 <div id="loadingScreen" aria-hidden="true">
@@ -35,6 +36,9 @@
     }, 1600);
   }
   document.addEventListener("click", function(event) {
+    // Heart button: never trigger card navigation or the loading screen
+    if (event.target.closest(".wish-btn")) return;
+
     const explore = event.target.closest('a[href="#carsContainer"], [data-explore]');
     if (explore) {
       event.preventDefault();
@@ -55,6 +59,7 @@
   <div class="nav-links">
     <a href="#carsContainer" class="hide-m">Collection</a>
     <a href="https://www.instagram.com/86autopro" target="_blank" class="hide-m">Instagram</a>
+    <a href="wishlist.html" id="wishLink" aria-label="Wishlist">♥ <span class="hide-m">Wishlist</span><span class="wish-count" id="wishCount"></span></a>
     <a href="login.html" id="accountLink">Login</a>
     <a href="cart.html" id="cartCount" class="btn" style="padding:10px 18px">🛒 View Cart</a>
   </div>
@@ -134,8 +139,6 @@
   <p style="margin-top:14px;font-size:13px">© 2026 86AutoPro. All Rights Reserved.</p>
 </footer>
 
-<script type="module" src="auth.js"></script>
-
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 const supabase = createClient(
@@ -144,7 +147,11 @@ const supabase = createClient(
 );
 
 let showAll = false, allCars = [], filter = "all", query = "";
+let auth = null;            // loaded in the background (see bottom)
+let saved = new Set();      // car IDs (strings) saved by the logged-in customer
 const container = document.getElementById("carsContainer");
+
+const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
 
 function render(){
   let list = allCars.filter(c =>
@@ -157,8 +164,10 @@ function render(){
     const badge = car.is_associated && co
       ? `<div class="company-badge">${co.toLowerCase()==="86autopro" ? "86 Spec 🏅" : co}</div>` : "";
     const sold = car.status === "sold";
+    const isSaved = saved.has(String(car.id));
     return `
 <div class="car-card" data-car-url="car.html?id=${car.id}">
+  <button type="button" class="wish-btn${isSaved ? ' saved' : ''}" data-wish="${car.id}" aria-pressed="${isSaved}" aria-label="${isSaved ? 'Remove from wishlist' : 'Add to wishlist'}">${HEART}</button>
   <div class="status-badge ${sold ? 'sold' : 'available'}">${sold ? 'SOLD OUT' : 'AVAILABLE'}</div>
   ${badge}
   <img src="${car.image}" class="main-car-image" loading="lazy" alt="${car.name}">
@@ -198,7 +207,70 @@ function updateCartCount(){
   if(b) b.innerHTML = `🛒 ${cart.length}`;
 }
 window.addEventListener("focus", updateCartCount);
+
+// ---------------- Wishlist hearts ----------------
+function applyHeart(btn, isSaved, animate){
+  btn.classList.toggle("saved", isSaved);
+  btn.setAttribute("aria-pressed", String(isSaved));
+  btn.setAttribute("aria-label", isSaved ? "Remove from wishlist" : "Add to wishlist");
+  if(animate){ btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
+}
+function updateHearts(){
+  document.querySelectorAll(".wish-btn").forEach(b => applyHeart(b, saved.has(b.dataset.wish)));
+}
+function updateCount(loggedIn){
+  const el = document.getElementById("wishCount");
+  if(el) el.textContent = loggedIn && saved.size ? String(saved.size) : "";
+}
+
+let warned = false;
+async function syncWishlist(){
+  if(!auth) return;
+  try{
+    const map = await auth.loadWishlist(true);   // null = logged out
+    saved = new Set(map ? [...map.keys()] : []);
+    updateHearts();
+    updateCount(map !== null);
+  }catch(err){
+    console.error("Wishlist load failed:", err);
+    if(!warned){ warned = true; auth.toast("Couldn't load your wishlist. Please refresh."); }
+  }
+}
+
+container.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".wish-btn");
+  if(!btn) return;
+  e.preventDefault();
+  e.stopPropagation();           // never open the car page from the heart
+
+  if(!auth){ alert("Wishlist is unavailable right now. Please try again later."); return; }
+  const user = await auth.currentUser();
+  if(!user){ auth.goLogin("Please log in to save cars to your wishlist."); return; }
+
+  btn.disabled = true;
+  try{
+    const res = await auth.toggleWishlist(btn.dataset.wish);
+    if(res.saved) saved.add(btn.dataset.wish); else saved.delete(btn.dataset.wish);
+    applyHeart(btn, res.saved, true);
+    updateCount(true);
+    auth.toast(res.saved ? "Saved to your wishlist ♥" : "Removed from your wishlist");
+  }catch(err){
+    console.error("Wishlist toggle failed:", err);
+    if(err && err.message === "LOGIN_REQUIRED") auth.goLogin("Please log in to save cars to your wishlist.");
+    else if(err && err.message === "SAVE_FAILED") auth.toast("Couldn't save this car. Please try again.");
+    else auth.toast("Wishlist error. Please try again.");
+  }finally{
+    btn.disabled = false;
+  }
+});
+
+window.addEventListener("pageshow", (e) => { if(e.persisted) syncWishlist(); });
+
 loadCars(); updateCartCount();
+
+// Load auth.js in the background: if it ever fails, the marketplace still works.
+import("./auth.js").then((m) => { auth = m; syncWishlist(); })
+  .catch((err) => console.error("auth.js failed to load:", err));
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
