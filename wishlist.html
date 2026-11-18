@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>My Wishlist — 86AutoPro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="wishlist.css">
+<style>
+.wl-card .wish-btn{top:22px;left:22px}
+.wl-card{transition:.35s,opacity .3s,transform .3s}
+.wl-card.leaving{opacity:0;transform:scale(.95)}
+.state{max-width:520px;margin:30px auto;padding:44px 28px;text-align:center;border-radius:26px}
+.state .big{font-size:46px;color:var(--red);margin-bottom:12px}
+.state h2{font-size:24px;font-weight:800;margin-bottom:8px}
+.state p{color:var(--mut);line-height:1.6;margin-bottom:22px}
+.unavail{aspect-ratio:9/16;display:grid;place-items:center;text-align:center;background:var(--bg2);border-radius:16px;margin-bottom:14px;color:var(--mut);padding:20px;font-size:14px;line-height:1.5}
+.btn-row{display:flex;gap:8px}.btn-row .btn{flex:1}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="index.html" class="logo-crop" aria-label="86AutoPro home"><img src="logo.PNG" alt="86AutoPro"></a>
+  <div class="nav-links">
+    <a href="index.html" class="hide-m">Marketplace</a>
+    <a href="wishlist.html" aria-label="Wishlist" style="color:#fff">♥ <span class="hide-m">Wishlist</span><span class="wish-count" id="wishCount"></span></a>
+    <a href="login.html" id="accountLink">Login</a>
+    <a href="cart.html" id="cartCount" class="btn" style="padding:10px 18px">🛒</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <h1 class="title">MY WISHLIST</h1>
+  <p class="sub" id="countText">&nbsp;</p>
+  <div id="content"></div>
+</main>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+const supabase = createClient(
+"https://juwpebbsyeixiaxqhvok.supabase.co",
+"sb_publishable_YR1oDYdZjescuBhIIg5Cgw_MW7Yy8Dv"
+);
+
+const $ = (id) => document.getElementById(id);
+const content = $("content");
+let auth = null;
+let wishMap = null;
+
+const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
+const esc = (v) => { const d = document.createElement("div"); d.textContent = String(v ?? ""); return d.innerHTML.replace(/"/g, "&quot;"); };
+
+function setCount(n){
+  $("countText").textContent = n === null ? "" : (n === 1 ? "1 saved car" : n + " saved cars");
+  $("wishCount").textContent = n ? String(n) : "";
+}
+function updateCartCount(){
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  $("cartCount").textContent = "🛒 " + cart.length;
+}
+
+function showState(icon, title, text, buttonsHtml = ""){
+  content.innerHTML = `<div class="card state"><div class="big">${icon}</div><h2>${title}</h2><p>${text}</p>${buttonsHtml}</div>`;
+}
+function showLoading(){ setCount(null); showState("♥", "Loading your wishlist...", "Just a moment."); }
+function showEmpty(){
+  setCount(0);
+  showState("♥", "Your Wishlist is Empty", "Save your favorite cars and find them here whenever you return.",
+    '<a href="index.html" class="btn">EXPLORE COLLECTION</a>');
+}
+function showError(msg){
+  setCount(null);
+  showState("⚠️", "Something went wrong", esc(msg),
+    '<button class="btn" id="retryBtn">TRY AGAIN</button>');
+  $("retryBtn").onclick = load;
+}
+function showLogin(){
+  setCount(null);
+  showState("🔒", "Login required", "Please log in to view your wishlist.",
+    '<button class="btn" id="loginBtn">LOGIN</button>');
+  $("loginBtn").onclick = () => auth.goLogin("Please log in to view your wishlist.");
+}
+
+function render(ids, byId){
+  const cards = ids.map((id) => {
+    const car = byId.get(id);
+    if(!car){
+      return `<div class="car-card wl-card" data-id="${esc(id)}">
+        <button type="button" class="wish-btn saved" data-remove="${esc(id)}" aria-label="Remove from wishlist">${HEART}</button>
+        <div class="unavail">This car is no longer available.<br>You can remove it from your wishlist.</div>
+      </div>`;
+    }
+    const sold = car.status === "sold";
+    return `<div class="car-card wl-card" data-id="${esc(id)}">
+      <button type="button" class="wish-btn saved" data-remove="${esc(id)}" aria-label="Remove ${esc(car.name)} from wishlist">${HEART}</button>
+      <div class="status-badge ${sold ? 'sold' : 'available'}">${sold ? 'SOLD OUT' : 'AVAILABLE'}</div>
+      <img src="${esc(car.image)}" class="main-car-image" loading="lazy" alt="${esc(car.name)}">
+      <div class="car-info">
+        <h2 class="car-name">${esc(car.name)}</h2>
+        <div class="price">₹${esc(car.price)}</div>
+        <a class="btn" href="car.html?id=${encodeURIComponent(car.id)}">View Details</a>
+      </div>
+    </div>`;
+  }).join("");
+  content.innerHTML = `<div class="grid" id="wlGrid">${cards}</div>`;
+  setCount(ids.length);
+}
+
+async function load(){
+  showLoading();
+  try{
+    auth = auth || await import("./auth.js");
+  }catch(e){
+    console.error(e);
+    return showError("Wishlist service couldn't load. Please refresh the page.");
+  }
+  try{
+    wishMap = await auth.loadWishlist(true);
+  }catch(e){
+    console.error(e);
+    return showError("Couldn't reach your account service. Please try again.");
+  }
+  if(wishMap === null) return showLogin();
+
+  const ids = [...wishMap.keys()].reverse(); // newest first
+  if(!ids.length) return showEmpty();
+
+  const { data, error } = await supabase.from("cars").select("*").in("id", ids);
+  if(error){ console.error(error); return showError("Couldn't load your saved cars. Please try again."); }
+  const byId = new Map((data || []).map((c) => [String(c.id), c]));
+  render(ids, byId);
+}
+
+content.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-remove]");
+  if(!btn) return;
+  const id = btn.dataset.remove;
+  btn.disabled = true;
+  try{
+    await auth.removeFromWishlist(id);
+    const card = btn.closest(".wl-card");
+    card.classList.add("leaving");
+    setTimeout(() => {
+      card.remove();
+      const left = document.querySelectorAll(".wl-card").length;
+      if(left === 0) showEmpty(); else setCount(left);
+    }, 300);
+    auth.toast("Removed from your wishlist");
+  }catch(err){
+    console.error(err);
+    btn.disabled = false;
+    if(err && err.message === "LOGIN_REQUIRED") showLogin();
+    else auth.toast("Couldn't remove this car. Please try again.");
+  }
+});
+
+window.addEventListener("pageshow", (e) => { if(e.persisted) load(); });
+updateCartCount();
+load();
+</script>
+</body>
+</html>
